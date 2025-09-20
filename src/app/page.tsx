@@ -897,7 +897,7 @@ const FAQAndReviewsSection: React.FC = () => {
                     className="mt-4 pt-4 border-t border-gray-200"
                   >
                     <p className="text-gray-600">
-                      Esta é uma resposta de exemplo para a pergunta "{question}". 
+                      Esta é uma resposta de exemplo para a pergunta &quot;{question}&quot;. 
                       Aqui você pode fornecer informações detalhadas sobre o tópico.
                     </p>
                   </motion.div>

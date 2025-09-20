@@ -4,12 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  User, 
-  ChevronDown
-} from 'lucide-react';
+import { User, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+// Removed unused import: Card
 
 const Header: React.FC = () => {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
@@ -53,7 +50,7 @@ const Header: React.FC = () => {
   
   
   return (
-    <header className="fixed top-8 left-[104px] w-[1232px] h-[70px] bg-white shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
+  <header className="fixed top-8 left-[104px] w-[1232px] h-[70px] bg-navbar/95 shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
       <div className="flex justify-between items-center h-full px-6">
           {/* Logo */}
           <div className="flex items-center">

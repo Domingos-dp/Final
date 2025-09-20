@@ -45,6 +45,9 @@
     
     /* Radius */
     --radius: 0.5rem;
+    /* Navbar (header) - Option 2: deep blue-gray for good contrast */
+    --navbar: 210 10% 20%; /* deep desaturated blue-gray */
+    --navbar-foreground: 0 0% 98%;
   }
   
   .dark {
@@ -80,6 +83,9 @@
     --chart-3: 210 80% 45%;
     --chart-4: 35 90% 65%;
     --chart-5: 200 90% 65%;
+    /* Navbar (header) - Option 2: deep blue-gray for good contrast */
+    --navbar: 210 10% 12%; /* darker variant for dark mode */
+    --navbar-foreground: 210 40% 98%;
   }
 }
 
@@ -90,25 +96,28 @@
 }
 
 /* Utility classes for HSL colors */
-.bg-background { background-color: hsl(var(--background)); }
-.bg-foreground { background-color: hsl(var(--foreground)); }
-.bg-card { background-color: hsl(var(--card)); }
-.bg-card-foreground { background-color: hsl(var(--card-foreground)); }
-.bg-popover { background-color: hsl(var(--popover)); }
-.bg-popover-foreground { background-color: hsl(var(--popover-foreground)); }
-.bg-primary { background-color: hsl(var(--primary)); }
-.bg-primary-foreground { background-color: hsl(var(--primary-foreground)); }
-.bg-secondary { background-color: hsl(var(--secondary)); }
-.bg-secondary-foreground { background-color: hsl(var(--secondary-foreground)); }
-.bg-muted { background-color: hsl(var(--muted)); }
-.bg-muted-foreground { background-color: hsl(var(--muted-foreground)); }
-.bg-accent { background-color: hsl(var(--accent)); }
-.bg-accent-foreground { background-color: hsl(var(--accent-foreground)); }
-.bg-destructive { background-color: hsl(var(--destructive)); }
-.bg-destructive-foreground { background-color: hsl(var(--destructive-foreground)); }
-.bg-border { background-color: hsl(var(--border)); }
-.bg-input { background-color: hsl(var(--input)); }
-.bg-ring { background-color: hsl(var(--ring)); }
+.bg-background { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
+.bg-foreground { background-color: hsl(var(--foreground)); color: hsl(var(--background)); }
+.bg-card { background-color: hsl(var(--card)); color: hsl(var(--card-foreground)); }
+.bg-card-foreground { background-color: hsl(var(--card-foreground)); color: hsl(var(--card)); }
+.bg-popover { background-color: hsl(var(--popover)); color: hsl(var(--popover-foreground)); }
+.bg-popover-foreground { background-color: hsl(var(--popover-foreground)); color: hsl(var(--popover)); }
+.bg-primary { background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+.bg-primary-foreground { background-color: hsl(var(--primary-foreground)); color: hsl(var(--primary)); }
+.bg-secondary { background-color: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); }
+.bg-secondary-foreground { background-color: hsl(var(--secondary-foreground)); color: hsl(var(--secondary)); }
+.bg-muted { background-color: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+.bg-muted-foreground { background-color: hsl(var(--muted-foreground)); color: hsl(var(--muted)); }
+.bg-accent { background-color: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+.bg-accent-foreground { background-color: hsl(var(--accent-foreground)); color: hsl(var(--accent)); }
+.bg-destructive { background-color: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); }
+.bg-destructive-foreground { background-color: hsl(var(--destructive-foreground)); color: hsl(var(--destructive)); }
+.bg-border { background-color: hsl(var(--border)); color: hsl(var(--foreground)); }
+.bg-input { background-color: hsl(var(--input)); color: hsl(var(--foreground)); }
+.bg-ring { background-color: hsl(var(--ring)); color: hsl(var(--foreground)); }
+
+.bg-navbar { background-color: hsl(var(--navbar)); color: hsl(var(--navbar-foreground)); }
+.bg-navbar-foreground { background-color: hsl(var(--navbar-foreground)); color: hsl(var(--navbar)); }
 
 .text-background { color: hsl(var(--background)); }
 .text-foreground { color: hsl(var(--foreground)); }
@@ -130,6 +139,9 @@
 .text-input { color: hsl(var(--input)); }
 .text-ring { color: hsl(var(--ring)); }
 
+.text-navbar { color: hsl(var(--navbar)); }
+.text-navbar-foreground { color: hsl(var(--navbar-foreground)); }
+
 .border-background { border-color: hsl(var(--background)); }
 .border-foreground { border-color: hsl(var(--foreground)); }
 .border-card { border-color: hsl(var(--card)); }
@@ -149,6 +161,8 @@
 .border-border { border-color: hsl(var(--border)); }
 .border-input { border-color: hsl(var(--input)); }
 .border-ring { border-color: hsl(var(--ring)); }
+.border-navbar { border-color: hsl(var(--navbar)); }
+
 
 .ring-background { --tw-ring-color: hsl(var(--background)); }
 .ring-foreground { --tw-ring-color: hsl(var(--foreground)); }
@@ -169,6 +183,7 @@
 .ring-border { --tw-ring-color: hsl(var(--border)); }
 .ring-input { --tw-ring-color: hsl(var(--input)); }
 .ring-ring { --tw-ring-color: hsl(var(--ring)); }
+.ring-navbar { --tw-ring-color: hsl(var(--navbar)); }
 
 .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
 .ring-offset-foreground { --tw-ring-offset-color: hsl(var(--foreground)); }

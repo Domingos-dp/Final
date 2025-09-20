@@ -57,6 +57,18 @@ export default function SearchPage() {
   const [superhost, setSuperhost] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  useEffect(() => {
+    // determine viewport size on client only
+    const handleResize = () => setIsMobileViewport(window.innerWidth < 640);
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+    }
+    return () => {
+      if (typeof window !== 'undefined') window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   const properties = [
     {
@@ -611,7 +623,7 @@ export default function SearchPage() {
                 </h2>
                 {searchQuery && (
                   <p className="text-gray-600 text-sm mt-1">
-                    Resultados para "{searchQuery}"
+                    Resultados para &quot;{searchQuery}&quot;
                   </p>
                 )}
               </div>
@@ -770,7 +782,7 @@ export default function SearchPage() {
               </Button>
               
               <div className="flex items-center space-x-1">
-                {Array.from({ length: Math.min(totalPages, window.innerWidth < 640 ? 3 : 5) }, (_, i) => {
+                {Array.from({ length: Math.min(totalPages, isMobileViewport ? 3 : 5) }, (_, i) => {
                   const page = i + 1;
                   return (
                     <Button
@@ -784,8 +796,8 @@ export default function SearchPage() {
                     </Button>
                   );
                 })}
-                
-                {totalPages > (window.innerWidth < 640 ? 3 : 5) && (
+
+                {totalPages > (isMobileViewport ? 3 : 5) && (
                   <>
                     <span className="text-gray-500 text-sm">...</span>
                     <Button

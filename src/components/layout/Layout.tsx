@@ -2,42 +2,12 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Search,
-  User,
-  ChevronDown,
-  Globe,
-  MapPin,
-  Calendar,
-  Users,
-  Home,
-  Compass,
-  BarChart3,
-  MessageCircle,
-  HelpCircle,
-  Settings,
-  Menu,
-  X
-} from 'lucide-react';
+import { ChevronDown, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useUI';
-import { cn } from '@/utils';
 import Footer from './Footer';
 
 // Tipos
@@ -45,51 +15,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-interface NavItem {
-  label: string;
-  href: string;
-  icon?: React.ReactNode;
-  badge?: number;
-  requiresAuth?: boolean;
-  hostOnly?: boolean;
-}
-
-// Itens de navegação
-const navItems: NavItem[] = [
-  {
-    label: 'Início',
-    href: '/',
-    icon: <Home className="w-4 h-4" />
-  },
-  {
-    label: 'Buscar',
-    href: '/search',
-    icon: <Search className="w-4 h-4" />
-  },
-  {
-    label: 'Experiências',
-    href: '/experiences',
-    icon: <Compass className="w-4 h-4" />
-  },
-  {
-    label: 'Comparar',
-    href: '/compare',
-    icon: <BarChart3 className="w-4 h-4" />
-  },
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: <User className="w-4 h-4" />,
-    requiresAuth: true
-  },
-  {
-    label: 'Anfitrião',
-    href: '/host',
-    icon: <Settings className="w-4 h-4" />,
-    requiresAuth: true,
-    hostOnly: true
-  }
-];
+// navigation is declared inline in Header component instead of using a top-level navItems
 
 // Componente Header
 const Header: React.FC = () => {
@@ -134,7 +60,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="fixed top-2 sm:top-4 lg:top-8 left-2 sm:left-4 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-[calc(100%-16px)] sm:w-[calc(100%-32px)] lg:w-[1232px] h-[60px] sm:h-[65px] lg:h-[70px] bg-white shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
+  <header className="fixed top-2 sm:top-4 lg:top-8 left-2 sm:left-4 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-[calc(100%-16px)] sm:w-[calc(100%-32px)] lg:w-[1232px] h-[60px] sm:h-[65px] lg:h-[70px] bg-navbar/95 shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
       <div className="flex justify-between items-center h-full px-3 sm:px-4 lg:px-6">
           {/* Logo */}
           <div className="flex items-center">

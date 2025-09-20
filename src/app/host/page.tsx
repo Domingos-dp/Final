@@ -107,6 +107,8 @@ export default function HostDashboard() {
       guests: 4,
       status: 'confirmed',
       amount: 360000,
+      // provide totalPrice for display; fallback to amount where appropriate
+      totalPrice: 360000,
       nights: 3
     },
     {
@@ -118,6 +120,7 @@ export default function HostDashboard() {
       guests: 2,
       status: 'pending',
       amount: 225000,
+      totalPrice: 225000,
       nights: 3
     },
     {
@@ -129,6 +132,7 @@ export default function HostDashboard() {
       guests: 2,
       status: 'completed',
       amount: 480000,
+      totalPrice: 480000,
       nights: 4
     }
   ];
@@ -302,8 +306,8 @@ export default function HostDashboard() {
                      booking.status === 'pending' ? 'Pendente' : 'Concluído'}
                   </div>
                   <div className="text-sm font-medium text-gray-900 mt-1">
-                    {booking.totalPrice.toLocaleString()} AOA
-                  </div>
+                      {(booking.totalPrice ?? booking.amount ?? 0).toLocaleString()} AOA
+                    </div>
                 </div>
               </div>
             ))}
@@ -523,9 +527,9 @@ export default function HostDashboard() {
                   
                   <div className="flex items-center justify-between mt-4">
                     <div className="text-lg font-semibold text-gray-900">
-                      {booking.totalPrice.toLocaleString()} AOA
+                      {(booking.totalPrice ?? booking.amount ?? 0).toLocaleString()} AOA
                       <span className="text-sm text-gray-600 font-normal ml-2">
-                        ({booking.nights} noites)
+                        ({booking.nights ?? 0} noites)
                       </span>
                     </div>
                     
