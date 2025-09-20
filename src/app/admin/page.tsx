@@ -3,7 +3,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
   Users,
   Home,
@@ -12,7 +11,6 @@ import {
   TrendingUp,
   Eye,
   Edit,
-  Trash2,
   Plus,
   Search,
   Filter,
@@ -20,13 +18,11 @@ import {
   MoreHorizontal,
   CheckCircle,
   XCircle,
-  Clock,
+  AlertTriangle,
   Star,
   MapPin,
   Phone,
-  Mail,
-  Shield,
-  AlertTriangle
+  Shield
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -51,6 +47,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import mockData from '@/data/mockData';
+import { User, Property, Booking } from '@/types';
 import { formatCurrency, formatDate } from '@/utils';
 
 interface AdminStats {
@@ -71,14 +68,14 @@ const AdminDashboard: React.FC = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  // selectedFilter previously unused — removed to reduce lint noise
 
   // Mock admin stats
   const stats: AdminStats = {
     totalUsers: mockData.users.length,
     totalProperties: mockData.properties.length,
     totalBookings: mockData.bookings.length,
-    totalRevenue: mockData.bookings.reduce((sum: number, booking: any) => sum + booking.totalPrice, 0),
+    totalRevenue: mockData.bookings.reduce((sum: number, booking: Booking) => sum + (booking.totalPrice ?? 0), 0),
     monthlyGrowth: {
       users: 12.5,
       properties: 8.3,
@@ -127,7 +124,7 @@ const AdminDashboard: React.FC = () => {
     title: string;
     value: string | number;
     change: number;
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     color: string;
   }) => (
     <Card>
@@ -193,9 +190,9 @@ const AdminDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockData.bookings.slice(0, 5).map((booking: any) => {
-                const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
-                const user = mockData.users.find((u: any) => u.id === booking.userId);
+              {mockData.bookings.slice(0, 5).map((booking: Booking) => {
+                const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
+                const user = mockData.users.find((u: User) => u.id === booking.userId);
                 return (
                   <div key={booking.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center space-x-3">
@@ -229,8 +226,8 @@ const AdminDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockData.properties.slice(0, 5).map((property: any) => {
-                const bookingCount = mockData.bookings.filter((b: any) => b.propertyId === property.id).length;
+              {mockData.properties.slice(0, 5).map((property: Property) => {
+                const bookingCount = mockData.bookings.filter((b: Booking) => b.propertyId === property.id).length;
                 return (
                   <div key={property.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center space-x-3">
@@ -308,7 +305,7 @@ const AdminDashboard: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockData.users.map((user: any) => (
+            {mockData.users.map((user: User) => (
               <TableRow key={user.id}>
                 <TableCell>
                   <div className="flex items-center space-x-3">
@@ -389,9 +386,9 @@ const AdminDashboard: React.FC = () => {
 
       {/* Properties Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockData.properties.map((property: any) => {
-          const host = mockData.users.find((u: any) => u.id === property.hostId);
-          const bookingCount = mockData.bookings.filter((b: any) => b.propertyId === property.id).length;
+        {mockData.properties.map((property: Property) => {
+          const host = mockData.users.find((u: User) => u.id === property.hostId);
+          const bookingCount = mockData.bookings.filter((b: Booking) => b.propertyId === property.id).length;
           return (
             <Card key={property.id}>
               <CardContent className="p-4">
@@ -482,9 +479,9 @@ const AdminDashboard: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockData.bookings.map((booking: any) => {
-              const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
-              const user = mockData.users.find((u: any) => u.id === booking.userId);
+            {mockData.bookings.map((booking: Booking) => {
+              const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
+              const user = mockData.users.find((u: User) => u.id === booking.userId);
               return (
                 <TableRow key={booking.id}>
                   <TableCell>

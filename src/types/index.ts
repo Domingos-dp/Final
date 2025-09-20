@@ -218,7 +218,7 @@ export type CancellationPolicy =
   | 'super-strict';
 
 export interface ApiResponse<T> {
-  data: T;
+  data: T | null;
   message?: string;
   success: boolean;
   error?: string;
@@ -242,7 +242,7 @@ export interface Notification {
   title: string;
   message: string;
   isRead: boolean;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   createdAt: string;
 }
 
@@ -358,7 +358,8 @@ export interface AppConfig {
 export interface AppError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
+  
 }
 
 // Tipos de contexto

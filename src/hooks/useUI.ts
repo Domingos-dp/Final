@@ -2,8 +2,11 @@
 
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+
+// Local helper type used by several hooks here
+type SetValue<V> = V | ((val: V) => V);
 
 // Hook para gerenciar modais
 export function useModal(initialOpen = false) {
@@ -183,24 +186,28 @@ export function useLoading(initialStates: Record<string, boolean> = {}) {
 }
 
 // Hook para gerenciar formulários
-export function useForm<T extends Record<string, any>>(
+export function useForm<T extends Record<string, unknown>>(
   initialValues: T,
-  validationRules?: Partial<Record<keyof T, (value: any) => string | null>>
+  validationRules?: Partial<Record<keyof T, (value: unknown) => string | null>>
 ) {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const setValue = useCallback((field: keyof T, value: any) => {
-    setValues(prev => ({ ...prev, [field]: value }));
+  const setValue = useCallback((field: keyof T, value: SetValue<T[keyof T]>) => {
+    const newValue = typeof value === 'function'
+      ? (value as (prev: T[keyof T]) => T[keyof T])(values[field])
+      : (value as T[keyof T]);
+
+    setValues(prev => ({ ...prev, [field]: newValue } as T));
     
     // Validar campo se houver regras
     if (validationRules?.[field]) {
-      const error = validationRules[field]!(value);
+      const error = validationRules[field]!(newValue as unknown);
       setErrors(prev => ({ ...prev, [field]: error }));
     }
-  }, [validationRules]);
+  }, [validationRules, values]);
 
   const setFieldTouched = useCallback((field: keyof T, isTouched = true) => {
     setTouched(prev => ({ ...prev, [field]: isTouched }));
@@ -208,7 +215,7 @@ export function useForm<T extends Record<string, any>>(
 
   const validateField = useCallback((field: keyof T) => {
     if (validationRules?.[field]) {
-      const error = validationRules[field]!(values[field]);
+      const error = validationRules[field]!(values[field] as unknown);
       setErrors(prev => ({ ...prev, [field]: error }));
       return !error;
     }
@@ -223,7 +230,7 @@ export function useForm<T extends Record<string, any>>(
 
     Object.keys(validationRules).forEach(field => {
       const key = field as keyof T;
-      const error = validationRules[key]!(values[key]);
+      const error = validationRules[key]!(values[key] as unknown);
       if (error) {
         newErrors[key] = error;
         isValid = false;
@@ -336,11 +343,11 @@ export function usePagination({
 }
 
 // Hook para gerenciar filtros
-export function useFilters<T extends Record<string, any>>(initialFilters: T) {
+export function useFilters<T extends Record<string, unknown>>(initialFilters: T) {
   const [filters, setFilters] = useState<T>(initialFilters);
   const [activeFilters, setActiveFilters] = useState<Set<keyof T>>(new Set());
 
-  const setFilter = useCallback((key: keyof T, value: any) => {
+  const setFilter = useCallback((key: keyof T, value: T[keyof T]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     
     if (value !== initialFilters[key] && value !== null && value !== undefined && value !== '') {
@@ -491,25 +498,6 @@ export function useToast() {
     duration?: number;
   }>>([]);
 
-  const addToast = useCallback((
-    message: string,
-    type: 'success' | 'error' | 'warning' | 'info' = 'info',
-    duration = 5000
-  ) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const toast = { id, message, type, duration };
-    
-    setToasts(prev => [...prev, toast]);
-
-    if (duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, duration);
-    }
-
-    return id;
-  }, []);
-
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   }, []);
@@ -517,6 +505,24 @@ export function useToast() {
   const clearToasts = useCallback(() => {
     setToasts([]);
   }, []);
+
+  const addToast = useCallback(
+    (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 5000) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      const toast = { id, message, type, duration };
+
+      setToasts(prev => [...prev, toast]);
+
+      if (duration > 0) {
+        setTimeout(() => {
+          removeToast(id);
+        }, duration);
+      }
+
+      return id;
+    },
+    [removeToast]
+  );
 
   const success = useCallback((message: string, duration?: number) => {
     return addToast(message, 'success', duration);
@@ -546,7 +552,7 @@ export function useToast() {
   };
 }
 
-export default {
+const uiHooks = {
   useModal,
   useModals,
   useTabs,
@@ -559,3 +565,5 @@ export default {
   useSidebar,
   useToast
 };
+
+export default uiHooks;

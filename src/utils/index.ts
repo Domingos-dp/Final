@@ -210,7 +210,7 @@ export function generateId(): string {
 }
 
 // Debounce function
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -222,7 +222,7 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 // Throttle function
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -385,7 +385,7 @@ export const storage = {
 };
 
 // Utilitários para URL
-export function buildUrl(base: string, params: Record<string, any>): string {
+export function buildUrl(base: string, params: Record<string, unknown>): string {
   const url = new URL(base);
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
@@ -455,7 +455,7 @@ export function smoothScrollTo(elementId: string, offset: number = 0): void {
   }
 }
 
-export default {
+const utils = {
   cn,
   formatCurrency,
   formatNumber,
@@ -491,3 +491,5 @@ export default {
   isMobile,
   smoothScrollTo
 };
+
+export default utils;

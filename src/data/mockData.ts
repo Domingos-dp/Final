@@ -596,7 +596,7 @@ export const mockExperienceCategories = [
   { category: 'wellness', label: 'Bem-estar', icon: '🧘' }
 ];
 
-export default {
+const mockData = {
   users: mockUsers,
   properties: mockProperties,
   experiences: mockExperiences,
@@ -614,3 +614,5 @@ export default {
   propertyTypes: mockPropertyTypes,
   experienceCategories: mockExperienceCategories
 };
+
+export default mockData;

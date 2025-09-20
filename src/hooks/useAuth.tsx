@@ -282,7 +282,7 @@ export function useAuthOperations() {
 
 // Hook para gerenciar sessões
 export function useAuthSessions() {
-  const [sessions, setSessions] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<unknown[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadSessions = async () => {
@@ -290,7 +290,8 @@ export function useAuthSessions() {
     try {
       const result = await authManager.getActiveSessions();
       if (result.success && result.data) {
-        setSessions(result.data);
+        // attempt to coerce into array of objects but keep unknown type safety
+        setSessions(Array.isArray(result.data) ? result.data : []);
       }
     } catch (error) {
       console.error('Erro ao carregar sessões:', error);
@@ -303,7 +304,15 @@ export function useAuthSessions() {
     try {
       const result = await authManager.revokeSession(sessionId);
       if (result.success) {
-        setSessions(prev => prev.filter(session => session.id !== sessionId));
+        setSessions(prev => prev.filter(session => {
+          // session is unknown — defensively check shape
+          if (session && typeof session === 'object' && 'id' in session) {
+            // We checked the shape at runtime — assert a narrow type for TS
+            type SessionLike = { id: string } & Record<string, unknown>;
+            return (session as SessionLike).id !== sessionId;
+          }
+          return true;
+        }));
         toast.success('Sessão revogada com sucesso!');
         return true;
       } else {

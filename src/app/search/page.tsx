@@ -1,42 +1,30 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
-  MapPin, 
-  Calendar, 
-  Users, 
-  Filter,
   Star,
   Heart,
   Grid3X3,
   List,
-  SlidersHorizontal,
-  X,
-  Wifi,
-  Car,
-  Coffee,
-  Tv,
-  AirVent,
-  Waves,
-  TreePine,
-  Mountain,
-  Building,
-  Home,
-  Hotel,
-  Tent,
   ChevronDown,
-  ChevronUp,
-  Map,
-  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
-  Minus,
-  Plus
+  Map,
+  Home,
+  Building,
+  Hotel,
+  TreePine,
+  Mountain,
+  Wifi,
+  Waves,
+  Car,
+  Coffee,
+  AirVent,
+  Tv
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+// Card not used in this file
 import { Input } from '@/components/ui/Input';
 
 export default function SearchPage() {

@@ -9,7 +9,6 @@ import {
   Clock,
   MapPin,
   Users,
-  CreditCard,
   Check,
   X,
   MessageSquare,
@@ -17,25 +16,20 @@ import {
   AlertCircle,
   Star,
   Download,
-  Filter,
   Search,
-  ChevronRight,
-  Home,
-  Utensils,
-  Car,
-  Wifi
+  Home
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/Input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import mockData from '@/data/mockData';
 import { formatCurrency, formatDate } from '@/utils';
+import { Booking, Property, User } from '@/types';
 
 const BookingPage: React.FC = () => {
   const { user } = useAuth();
@@ -45,7 +39,7 @@ const BookingPage: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
 
   // Filter user bookings from mock data
-  const userBookings = mockData.bookings.filter((booking: any) => booking.userId === user?.id);
+  const userBookings = mockData.bookings.filter((booking: Booking) => booking.userId === user?.id);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -84,9 +78,9 @@ const BookingPage: React.FC = () => {
     });
   };
 
-  const BookingCard = ({ booking }: { booking: any }) => {
-    const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
-    const host = mockData.users.find((u: any) => u.id === property?.hostId);
+  const BookingCard = ({ booking }: { booking: Booking }) => {
+    const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
+    const host = mockData.users.find((u: User) => u.id === property?.hostId);
     const isUpcoming = new Date(booking.checkIn) > new Date();
     const isPast = new Date(booking.checkOut) < new Date();
 
@@ -216,7 +210,7 @@ const BookingPage: React.FC = () => {
 
   const filterBookings = (status: string) => {
     const now = new Date();
-    return userBookings.filter((booking: any) => {
+  return userBookings.filter((booking: Booking) => {
       const checkIn = new Date(booking.checkIn);
       const checkOut = new Date(booking.checkOut);
       
@@ -232,11 +226,11 @@ const BookingPage: React.FC = () => {
         default:
           return true;
       }
-    }).filter((booking: any) => {
+  }).filter((booking: Booking) => {
       if (selectedFilter === 'all') return true;
       return booking.status === selectedFilter;
-    }).filter((booking: any) => {
-      const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
+    }).filter((booking: Booking) => {
+      const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
       return property?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
              property?.location?.city?.toLowerCase().includes(searchTerm.toLowerCase());
     });

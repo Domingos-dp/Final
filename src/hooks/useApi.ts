@@ -1,16 +1,15 @@
 // Hook personalizado para chamadas de API
 
-'use client';
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { apiClient } from '@/lib/api';
 import type { ApiResponse, PaginatedResponse } from '@/types';
 
 // Tipos para o hook
-interface UseApiOptions {
+interface UseApiOptions<T = unknown> {
   immediate?: boolean;
-  dependencies?: any[];
-  onSuccess?: (data: any) => void;
+  dependencies?: unknown[];
+  onSuccess?: (data: T | null) => void;
   onError?: (error: Error) => void;
   retries?: number;
   retryDelay?: number;
@@ -27,13 +26,13 @@ interface UseApiState<T> {
 }
 
 interface UseApiReturn<T> extends UseApiState<T> {
-  execute: (...args: any[]) => Promise<T | null>;
+  execute: (...args: unknown[]) => Promise<T | null>;
   reset: () => void;
   refresh: () => Promise<T | null>;
 }
 
 // Cache simples em memória
-const apiCache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+const apiCache = new Map<string, { data: unknown; timestamp: number; ttl: number }>();
 
 // Função para limpar cache expirado
 const cleanExpiredCache = () => {
@@ -46,9 +45,9 @@ const cleanExpiredCache = () => {
 };
 
 // Hook principal para chamadas de API
-export function useApi<T = any>(
-  apiFunction: (...args: any[]) => Promise<ApiResponse<T>>,
-  options: UseApiOptions = {}
+export function useApi<T = unknown>(
+  apiFunction: (...args: unknown[]) => Promise<ApiResponse<T>>,
+  options: UseApiOptions<T> = {}
 ): UseApiReturn<T> {
   const {
     immediate = false,
@@ -69,12 +68,12 @@ export function useApi<T = any>(
     success: false
   });
 
-  const lastArgsRef = useRef<any[]>([]);
+  const lastArgsRef = useRef<unknown[]>([]);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Função para executar a chamada da API
   const execute = useCallback(
-    async (...args: any[]): Promise<T | null> => {
+    async (...args: unknown[]): Promise<T | null> => {
       // Cancelar requisição anterior se existir
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -90,12 +89,12 @@ export function useApi<T = any>(
         const cached = apiCache.get(cacheKey);
         if (cached && Date.now() <= cached.timestamp + cached.ttl) {
           setState({
-            data: cached.data,
+            data: cached.data as T,
             loading: false,
             error: null,
             success: true
           });
-          return cached.data;
+          return cached.data as T;
         }
       }
 
@@ -111,14 +110,14 @@ export function useApi<T = any>(
 
       while (attempt < maxAttempts) {
         try {
-          const response = await apiFunction(...args);
+          const response = await apiFunction(...(args as unknown[]));
           
           // Verificar se a requisição foi cancelada
           if (abortControllerRef.current?.signal.aborted) {
             return null;
           }
 
-          const data = response.data;
+          const data = response.data as T;
 
           // Salvar no cache se habilitado
           if (cache && cacheKey) {
@@ -216,20 +215,20 @@ export function useApi<T = any>(
 }
 
 // Hook para chamadas de API paginadas
-export function usePaginatedApi<T = any>(
-  apiFunction: (page: number, limit: number, ...args: any[]) => Promise<ApiResponse<PaginatedResponse<T>>>,
-  options: UseApiOptions & { limit?: number } = {}
+export function usePaginatedApi<T = unknown>(
+  apiFunction: (page: number, limit: number, ...args: unknown[]) => Promise<ApiResponse<PaginatedResponse<T>>>,
+  options: UseApiOptions<PaginatedResponse<T>> & { limit?: number } = {}
 ) {
   const { limit = 10, ...apiOptions } = options;
   const [page, setPage] = useState(1);
   const [allData, setAllData] = useState<T[]>([]);
   const [hasMore, setHasMore] = useState(true);
-
-  const { data, loading, error, success, execute, reset } = useApi(
-    (currentPage: number, ...args: any[]) => apiFunction(currentPage, limit, ...args),
+  const { data, loading, error, success, execute, reset } = useApi<PaginatedResponse<T>>(
+    (...args: unknown[]) => apiFunction(args[0] as number, limit, ...(args.slice(1) as unknown[])),
     {
       ...apiOptions,
-      onSuccess: (response: PaginatedResponse<T>) => {
+      onSuccess: (response: PaginatedResponse<T> | null) => {
+        if (!response) return;
         if (page === 1) {
           setAllData(response.data);
         } else {
@@ -242,11 +241,11 @@ export function usePaginatedApi<T = any>(
   );
 
   const loadMore = useCallback(
-    (...args: any[]) => {
+    (...args: unknown[]) => {
       if (!loading && hasMore) {
         const nextPage = page + 1;
         setPage(nextPage);
-        return execute(nextPage, ...args);
+        return execute(nextPage, ...(args as unknown[]));
       }
       return Promise.resolve(null);
     },
@@ -261,11 +260,11 @@ export function usePaginatedApi<T = any>(
   }, [reset]);
 
   const refresh = useCallback(
-    (...args: any[]) => {
+    (...args: unknown[]) => {
       setPage(1);
       setAllData([]);
       setHasMore(true);
-      return execute(1, ...args);
+      return execute(1, ...(args as unknown[]));
     },
     [execute]
   );
@@ -280,9 +279,9 @@ export function usePaginatedApi<T = any>(
     hasMore,
     totalCount: data?.pagination?.total || 0,
     totalPages: data?.pagination?.totalPages || 0,
-    execute: (page: number, ...args: any[]) => {
+    execute: (page: number, ...args: unknown[]) => {
       setPage(page);
-      return execute(page, ...args);
+      return execute(page, ...(args as unknown[]));
     },
     loadMore,
     reset: resetPagination,
@@ -291,12 +290,12 @@ export function usePaginatedApi<T = any>(
 }
 
 // Hook para múltiplas chamadas de API
-export function useMultipleApi<T extends Record<string, any>>(
+export function useMultipleApi<T extends Record<string, unknown>>(
   apis: {
     [K in keyof T]: {
-      function: (...args: any[]) => Promise<ApiResponse<T[K]>>;
-      options?: UseApiOptions;
-      args?: any[];
+      function: (...args: unknown[]) => Promise<ApiResponse<T[K]>>;
+      options?: UseApiOptions<T[K]>;
+      args?: unknown[];
     }
   }
 ) {
@@ -410,10 +409,10 @@ export function useMultipleApi<T extends Record<string, any>>(
 }
 
 // Hook para polling (requisições periódicas)
-export function usePolling<T = any>(
-  apiFunction: (...args: any[]) => Promise<ApiResponse<T>>,
+export function usePolling<T = unknown>(
+  apiFunction: (...args: unknown[]) => Promise<ApiResponse<T>>,
   interval: number = 5000,
-  options: UseApiOptions = {}
+  options: UseApiOptions<T> = {}
 ) {
   const [isPolling, setIsPolling] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -421,7 +420,7 @@ export function usePolling<T = any>(
   const { data, loading, error, success, execute, reset } = useApi(apiFunction, options);
 
   const startPolling = useCallback(
-    (...args: any[]) => {
+    (...args: unknown[]) => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -470,13 +469,13 @@ export function usePolling<T = any>(
 }
 
 // Hook para upload de arquivos
-export function useFileUpload(
-  uploadFunction: (file: File, onProgress?: (progress: number) => void) => Promise<ApiResponse<any>>,
-  options: UseApiOptions = {}
+export function useFileUpload<T = unknown>(
+  uploadFunction: (file: File, onProgress?: (progress: number) => void) => Promise<ApiResponse<T>>,
+  options: UseApiOptions<T> = {}
 ) {
   const [progress, setProgress] = useState(0);
-  const { data, loading, error, success, execute, reset } = useApi(
-    (file: File) => uploadFunction(file, setProgress),
+  const { data, loading, error, success, execute, reset } = useApi<T>(
+    (file: unknown) => uploadFunction(file as File, setProgress),
     options
   );
 

@@ -321,12 +321,12 @@ class AuthManager {
   }
 
   // Obter sessões ativas
-  async getActiveSessions(): Promise<{ success: boolean; data?: any[]; error?: string }> {
+  async getActiveSessions(): Promise<{ success: boolean; data?: unknown[]; error?: string }> {
     try {
       const response = await apiClient.get('/auth/sessions');
       
       if (response.success) {
-        return { success: true, data: response.data as any[] };
+        return { success: true, data: response.data as unknown[] };
       }
       
       return { success: false, error: response.error || 'Erro ao obter sessões' };

@@ -60,7 +60,7 @@ export function useLocalStorage<T>(
 }
 
 // Hook para múltiplas chaves do localStorage
-export function useMultipleLocalStorage<T extends Record<string, any>>(
+export function useMultipleLocalStorage<T extends Record<string, unknown>>(
   keys: (keyof T)[],
   initialValues: T
 ): [T, (key: keyof T, value: SetValue<T[keyof T]>) => void, (key: keyof T) => void] {
@@ -272,7 +272,7 @@ export function useSyncedLocalStorage<T>(
 export function useValidatedLocalStorage<T>(
   key: string,
   initialValue: T,
-  validator: (value: any) => value is T
+  validator: (value: unknown) => value is T
 ): [T, (value: SetValue<T>) => void, () => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === 'undefined') {

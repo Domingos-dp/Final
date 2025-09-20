@@ -9,8 +9,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/a
 interface RequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: Record<string, string>;
-  body?: any;
-  params?: Record<string, any>;
+  body?: unknown;
+  params?: Record<string, unknown>;
 }
 
 // Cliente HTTP personalizado
@@ -36,7 +36,7 @@ class ApiClient {
   }
 
   // Construir URL com parâmetros
-  private buildUrl(endpoint: string, params?: Record<string, any>): string {
+  private buildUrl(endpoint: string, params?: Record<string, unknown>): string {
     const url = new URL(`${this.baseURL}${endpoint}`);
     
     if (params) {
@@ -86,7 +86,7 @@ class ApiClient {
     } catch (error) {
       console.error('API Request Error:', error);
       return {
-        data: null as any,
+        data: null as unknown as T,
         error: error instanceof Error ? error.message : 'Erro desconhecido',
         success: false,
       };
@@ -94,19 +94,19 @@ class ApiClient {
   }
 
   // Métodos HTTP
-  async get<T>(endpoint: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
+  async get<T>(endpoint: string, params?: Record<string, unknown>): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'GET', params });
   }
 
-  async post<T>(endpoint: string, body?: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'POST', body });
   }
 
-  async put<T>(endpoint: string, body?: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PUT', body });
   }
 
-  async patch<T>(endpoint: string, body?: any): Promise<ApiResponse<T>> {
+  async patch<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PATCH', body });
   }
 
@@ -115,7 +115,7 @@ class ApiClient {
   }
 
   // Método para upload de arquivos
-  async upload<T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<ApiResponse<T>> {
+  async upload<T>(endpoint: string, file: File, additionalData?: Record<string, unknown>): Promise<ApiResponse<T>> {
     const formData = new FormData();
     formData.append('file', file);
     
@@ -149,7 +149,7 @@ class ApiClient {
     } catch (error) {
       console.error('Upload Error:', error);
       return {
-        data: null as any,
+        data: null as unknown as T,
         error: error instanceof Error ? error.message : 'Erro no upload',
         success: false,
       };
@@ -197,7 +197,7 @@ export function setupAuthInterceptor(onUnauthorized: () => void) {
 }
 
 // Utilitários para cache simples
-const cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+const cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>();
 
 export function getCachedData<T>(key: string): T | null {
   const cached = cache.get(key);
@@ -208,7 +208,7 @@ export function getCachedData<T>(key: string): T | null {
     return null;
   }
   
-  return cached.data;
+  return cached.data as T | null;
 }
 
 export function setCachedData<T>(key: string, data: T, ttl: number = 5 * 60 * 1000): void {
@@ -233,7 +233,7 @@ export async function retryRequest<T>(
   maxRetries: number = 3,
   delay: number = 1000
 ): Promise<ApiResponse<T>> {
-  let lastError: any;
+  let lastError: unknown;
   
   for (let i = 0; i <= maxRetries; i++) {
     try {
@@ -252,8 +252,8 @@ export async function retryRequest<T>(
   }
   
   return {
-    data: null as any,
-    error: lastError || 'Falha após múltiplas tentativas',
+    data: null as unknown as T,
+    error: typeof lastError === 'string' ? lastError : (lastError instanceof Error ? lastError.message : 'Falha após múltiplas tentativas'),
     success: false,
   };
 }
@@ -277,7 +277,7 @@ export async function batchRequests<T>(
 // Tipos para webhooks
 export interface WebhookPayload {
   event: string;
-  data: any;
+  data: unknown;
   timestamp: string;
   signature?: string;
 }

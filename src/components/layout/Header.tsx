@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/Button';
-// Removed unused import: Card
 
 const Header: React.FC = () => {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
@@ -96,26 +95,26 @@ const Header: React.FC = () => {
                     <AnimatePresence>
                       {(item.name === 'Our products' && isProductsMenuOpen) || 
                        (item.name === 'Benefits avaliables to partners' && isBenefitsMenuOpen) ? (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
-                        >
-                          {item.dropdownItems?.map((dropdownItem) => (
-                            <Link
-                              key={dropdownItem.name}
-                              href={dropdownItem.href}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                              onClick={() => {
-                                setIsProductsMenuOpen(false);
-                                setIsBenefitsMenuOpen(false);
-                              }}
-                            >
-                              {dropdownItem.name}
-                            </Link>
-                          ))}
-                        </motion.div>
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
+                          >
+                            {item.dropdownItems?.map((dropdownItem) => (
+                              <Link
+                                key={dropdownItem.name}
+                                href={dropdownItem.href}
+                                className="block px-4 py-2 text-sm text-black hover:bg-gray-50"
+                                onClick={() => {
+                                  setIsProductsMenuOpen(false);
+                                  setIsBenefitsMenuOpen(false);
+                                }}
+                              >
+                                {dropdownItem.name}
+                              </Link>
+                            ))}
+                          </motion.div>
                       ) : null}
                     </AnimatePresence>
                   </div>
@@ -162,7 +161,7 @@ const Header: React.FC = () => {
                         onClick={() => setIsLanguageMenuOpen(false)}
                       >
                         <span className="text-lg">{lang.flag}</span>
-                        <span className="text-sm text-gray-700">{lang.name}</span>
+                        <span className="text-sm text-black">{lang.name}</span>
                       </button>
                     ))}
                   </motion.div>

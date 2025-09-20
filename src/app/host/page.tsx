@@ -8,30 +8,21 @@ import {
   DollarSign, 
   Star, 
   Users,
-  Settings,
-  Bell,
-  Plus,
   Edit3,
   Eye,
   Trash2,
   MapPin,
-  Camera,
-  Upload,
   TrendingUp,
-  TrendingDown,
   CheckCircle,
   Clock,
   XCircle,
   MessageSquare,
   BarChart3,
-  PieChart,
-  FileText,
-  Download,
-  Filter,
-  Search
+  FileText
 } from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 export default function HostDashboard() {
@@ -267,7 +258,7 @@ export default function HostDashboard() {
           </div>
           
           <div className="space-y-4">
-            {monthlyStats.map((stat: any, index: number) => (
+            {monthlyStats.map((stat: { month: string; earnings: number; bookings: number }) => (
               <div key={stat.month} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 text-sm text-gray-600">{stat.month}</div>
@@ -291,7 +282,7 @@ export default function HostDashboard() {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Atividade Recente</h3>
           
           <div className="space-y-4">
-            {recentBookings.slice(0, 4).map((booking: any) => (
+            {recentBookings.slice(0, 4).map((booking: { id: number; propertyName: string; guestName: string; checkIn: string; checkOut: string; guests: number; status: string; amount: number; totalPrice: number; nights: number }) => (
               <div key={booking.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                 <div>
                   <div className="font-medium text-gray-900">{booking.guestName}</div>
@@ -373,7 +364,7 @@ export default function HostDashboard() {
       
       {/* Properties Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {properties.map((property: any) => (
+  {properties.map((property: { id: number; name: string; location: string; type: string; status: string; rating: number; reviews: number; price: number; occupancy: number; earnings: number; image: string; bookings: number }) => (
           <Card key={property.id} className="overflow-hidden">
             <div className="flex">
               <div className="w-48 h-48 bg-gradient-to-br from-primary-400 to-secondary-500 flex-shrink-0"></div>
@@ -495,7 +486,7 @@ export default function HostDashboard() {
         </div>
         
         <div className="divide-y divide-gray-200">
-          {recentBookings.map((booking: any) => (
+          {recentBookings.map((booking: { id: number; propertyName: string; guestName: string; checkIn: string; checkOut: string; guests: number; status: string; amount: number; totalPrice: number; nights: number }) => (
             <div key={booking.id} className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -599,7 +590,7 @@ export default function HostDashboard() {
         <h3 className="text-lg font-semibold text-gray-900 mb-6">Ganhos por Propriedade</h3>
         
         <div className="space-y-4">
-          {properties.filter((p: any) => p.earnings > 0).map((property: any) => (
+          {properties.filter((p: { earnings: number }) => p.earnings > 0).map((property: { id: number; name: string; location: string; type: string; status: string; rating: number; reviews: number; price: number; occupancy: number; earnings: number; image: string; bookings: number }) => (
             <div key={property.id} className="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-secondary-500 rounded-lg"></div>
@@ -627,7 +618,7 @@ export default function HostDashboard() {
         <h3 className="text-lg font-semibold text-gray-900 mb-6">Evolução Mensal</h3>
         
         <div className="space-y-4">
-          {monthlyStats.map((stat: any) => (
+          {monthlyStats.map((stat: { month: string; earnings: number; bookings: number }) => (
             <div key={stat.month} className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="w-12 text-sm text-gray-600">{stat.month}</div>
@@ -679,7 +670,7 @@ export default function HostDashboard() {
               </div>
               
               <nav className="space-y-2">
-                {tabs.map((tab: any) => {
+                {tabs.map((tab: { id: string; label: string; icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>> }) => {
                   const Icon = tab.icon;
                   return (
                     <button

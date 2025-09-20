@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  Search,
   MapPin,
   Home,
   Heart,
@@ -17,7 +16,6 @@ import {
   Hotel,
   ChevronLeft,
   ChevronRight,
-  ArrowUp,
   Share2,
   Phone,
   ArrowRight,
@@ -26,8 +24,7 @@ import {
 
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// Card and tabs components are not used in this page currently
 
 // Componente Hero Section
 const HeroSection: React.FC = () => {
@@ -49,7 +46,7 @@ const HeroSection: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4">
+  <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4 pb-40 md:pb-96">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,8 +73,8 @@ const HeroSection: React.FC = () => {
 
       {/* Navigation Bar */}
       <div 
-        className="absolute"
-        style={{ 
+        className="absolute z-10 pointer-events-none"
+          style={{ 
           left: '50%',
           top: 'calc(100vh - 300px)', 
           width: '815px', 
@@ -85,7 +82,7 @@ const HeroSection: React.FC = () => {
           background: 'rgba(0, 0, 0, 0.25)',
           backdropFilter: 'blur(5px)',
           borderRadius: '0px 0px 12px 12px',
-          transform: 'translateX(-50%) matrix(1, 0, 0, -1, 0, 0)'
+          transform: 'translateX(-50%)'
         }}
       >
         <motion.div
@@ -93,15 +90,15 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="h-full flex items-center justify-start pl-2"
-          style={{ transform: 'matrix(1, 0, 0, -1, 0, 0)' }}
+          style={{ transform: 'none' }}
         >
           <div className="flex space-x-4">
             <button
               onClick={() => setActiveTab('Compra')}
               className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
                 activeTab === 'Compra' 
-                  ? 'bg-white text-orange-500 shadow-lg' 
-                  : 'text-white hover:text-gray-200'
+                  ? 'bg-white text-orange-500 shadow-lg pointer-events-auto' 
+                  : 'text-white hover:text-gray-200 pointer-events-auto'
               }`}
               style={{
                 direction: 'ltr',
@@ -114,8 +111,8 @@ const HeroSection: React.FC = () => {
               onClick={() => setActiveTab('Aluguel')}
               className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
                 activeTab === 'Aluguel' 
-                  ? 'bg-white text-orange-500 shadow-lg' 
-                  : 'text-white hover:text-gray-200'
+                  ? 'bg-white text-orange-500 shadow-lg pointer-events-auto' 
+                  : 'text-white hover:text-gray-200 pointer-events-auto'
               }`}
               style={{
                 direction: 'ltr',
@@ -128,8 +125,8 @@ const HeroSection: React.FC = () => {
               onClick={() => setActiveTab('Resorte')}
               className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
                 activeTab === 'Resorte' 
-                  ? 'bg-white text-orange-500 shadow-lg' 
-                  : 'text-white hover:text-gray-200'
+                  ? 'bg-white text-orange-500 shadow-lg pointer-events-auto' 
+                  : 'text-white hover:text-gray-200 pointer-events-auto'
               }`}
               style={{
                 direction: 'ltr',
@@ -142,8 +139,8 @@ const HeroSection: React.FC = () => {
               onClick={() => setActiveTab('Turismo')}
               className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
                 activeTab === 'Turismo' 
-                  ? 'bg-white text-orange-500 shadow-lg' 
-                  : 'text-white hover:text-gray-200'
+                  ? 'bg-white text-orange-500 shadow-lg pointer-events-auto' 
+                  : 'text-white hover:text-gray-200 pointer-events-auto'
               }`}
               style={{
                 direction: 'ltr',
@@ -158,7 +155,7 @@ const HeroSection: React.FC = () => {
 
       {/* Search Component */}
       <div 
-        className="absolute"
+        className="absolute z-20"
         style={{ 
           left: '50%',
           transform: 'translateX(-50%)',
@@ -283,11 +280,11 @@ const CategoriesSection: React.FC = () => {
           {[
             { icon: Building, name: "Hoteis" },
             { icon: Home, name: "Hospedarias" },
-            { icon: Building, name: "Terrenos" },
+            { icon: Building, name: "Terrenos", href: '/properties' },
             { icon: Utensils, name: "Restaurantes" },
-            { icon: Hotel, name: "Risort" },
-            { icon: Home, name: "Vivendas" },
-            { icon: Car, name: "Piscir" },
+            { icon: Hotel, name: "Risort", href: '/resorts' },
+            { icon: Home, name: "Vivendas", href: '/properties' },
+            { icon: Car, name: "Piscir", href: '/apartments' },
           ].map((category, index) => (
             <motion.div
               key={category.name}
@@ -297,10 +294,21 @@ const CategoriesSection: React.FC = () => {
               viewport={{ once: true }}
               className="flex flex-col items-center space-y-2 min-w-[100px] cursor-pointer hover:opacity-70 transition-opacity"
             >
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                <category.icon className="w-6 h-6 text-gray-600" />
-                </div>
-              <span className="text-sm font-medium text-gray-700">{category.name}</span>
+              {category.href ? (
+                <Link href={category.href} className="flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <category.icon className="w-6 h-6 text-gray-600" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{category.name}</span>
+                </Link>
+              ) : (
+                <>
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <category.icon className="w-6 h-6 text-gray-600" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{category.name}</span>
+                </>
+              )}
             </motion.div>
           ))}
         </div>

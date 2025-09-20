@@ -13,17 +13,15 @@ import {
   Paperclip,
   Smile,
   Image as ImageIcon,
-  MapPin,
   Calendar,
   Clock,
   Check,
   CheckCheck,
-  Star,
   Info,
   Archive,
   Trash2,
   Flag,
-  User,
+  User as UserIcon,
   Home
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -32,7 +30,7 @@ import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+// ...existing code...
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +42,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import mockData from '@/data/mockData';
 import { formatDate, formatDateTime } from '@/utils';
+import { User } from '@/types';
 
 interface Message {
   id: string;
@@ -207,16 +206,6 @@ const ChatPage: React.FC = () => {
   const handleSendMessage = () => {
     if (!messageText.trim() || !selectedConversation) return;
 
-    const newMessage: Message = {
-      id: `msg-${Date.now()}`,
-      senderId: user?.id || '',
-      receiverId: getOtherParticipant(selectedConversation),
-      content: messageText,
-      timestamp: new Date(),
-      type: 'text',
-      isRead: false
-    };
-
     // In a real app, this would be sent to the server
     toast({
       title: 'Mensagem enviada',
@@ -227,37 +216,42 @@ const ChatPage: React.FC = () => {
   };
 
   const getOtherParticipant = (conversationId: string): string => {
-    const conversation = conversations.find((c: any) => c.id === conversationId);
-    return conversation?.participants.find((p: any) => p !== user?.id) || '';
+    const conversation = conversations.find((c) => c.id === conversationId);
+    return conversation?.participants.find((p) => p !== user?.id) || '';
   };
 
   const getParticipantInfo = (userId: string) => {
-    return mockData.users.find((u: any) => u.id === userId) || {
+    const found = mockData.users.find((u) => u.id === userId);
+    if (found) return found as User;
+    // Minimal fallback shaped like User
+    return {
       id: userId,
+      email: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       firstName: 'Usuário',
       lastName: 'Desconhecido',
-      avatar: '',
-      email: ''
-    };
+      avatar: ''
+    } as User;
   };
 
   const getPropertyInfo = (propertyId?: string) => {
     if (!propertyId) return null;
-    return mockData.properties.find((p: any) => p.id === propertyId);
+    return mockData.properties.find((p) => p.id === propertyId) || null;
   };
 
   const getBookingInfo = (bookingId?: string) => {
     if (!bookingId) return null;
-    return mockData.bookings.find((b: any) => b.id === bookingId);
+    return mockData.bookings.find((b) => b.id === bookingId) || null;
   };
 
-  const filteredConversations = conversations.filter((conv: any) => {
+  const filteredConversations = conversations.filter((conv) => {
     const otherParticipant = getParticipantInfo(getOtherParticipant(conv.id));
-    const fullName = `${otherParticipant.firstName} ${otherParticipant.lastName}`.toLowerCase();
+    const fullName = `${otherParticipant.firstName ?? ''} ${otherParticipant.lastName ?? ''}`.toLowerCase();
     return fullName.includes(searchTerm.toLowerCase());
   });
 
-  const selectedConversationData = conversations.find((c: any) => c.id === selectedConversation);
+  const selectedConversationData = conversations.find((c) => c.id === selectedConversation);
   const selectedMessages = selectedConversation ? messages[selectedConversation] || [] : [];
   const otherParticipant = selectedConversation ? getParticipantInfo(getOtherParticipant(selectedConversation)) : null;
   const propertyInfo = getPropertyInfo(selectedConversationData?.propertyId);
@@ -483,7 +477,7 @@ const ChatPage: React.FC = () => {
                           <span>{formatDate(bookingInfo.checkIn)} - {formatDate(bookingInfo.checkOut)}</span>
                         </div>
                         <div className="flex items-center">
-                          <User className="w-3 h-3 mr-1" />
+                            <UserIcon className="w-3 h-3 mr-1" />
                           <span>{bookingInfo.guests} hóspedes</span>
                         </div>
                       </div>

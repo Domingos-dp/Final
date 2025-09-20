@@ -2,33 +2,9 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Search,
-  Filter,
-  MapPin,
-  Star,
-  Clock,
-  Users,
-  Calendar,
-  Heart,
-  Share2,
-  ChevronDown,
-  X,
-  Mountain,
-  Waves,
-  Camera,
-  Utensils,
-  Music,
-  TreePine,
-  Compass,
-  Sunset,
-  Fish,
-  Binoculars,
-  Car,
-  Plane
-} from 'lucide-react';
+import { Search, MapPin, Star, Clock, Users, Heart, Share2, Mountain, Waves, Camera, Utensils, Music, TreePine, Compass, Binoculars } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 export default function ExperiencesPage() {
@@ -39,6 +15,28 @@ export default function ExperiencesPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [favorites, setFavorites] = useState<string[]>([]);
+  
+  // Local types to avoid using `any` and keep this file self-contained
+  type LocalExperience = {
+    id: string;
+    title: string;
+    description?: string;
+    category?: string;
+  location?: string | { city?: string; province?: string };
+    duration?: string | number;
+    price?: number;
+    rating?: number;
+    reviews?: number;
+    maxGuests?: number;
+    image?: string;
+    host?: { name?: string; avatar?: string; superhost?: boolean };
+    highlights?: string[];
+    included?: string[];
+    difficulty?: string;
+    ageRestriction?: string;
+  };
+
+  type Category = { id: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }> };
   
   const categories = [
     { id: 'all', label: 'Todas', icon: Compass },
@@ -221,18 +219,35 @@ export default function ExperiencesPage() {
       ageRestriction: '14+'
     }
   ];
-  
-  const filteredExperiences = experiences.filter((experience: any) => {
+  // helpers used throughout the component
+  const getCity = (loc?: string | { city?: string; province?: string }) => {
+    if (!loc) return '';
+    if (typeof loc === 'string') return loc;
+    return loc.city ?? '';
+  };
+
+  const getProvince = (loc?: string | { city?: string; province?: string }) => {
+    if (!loc) return '';
+    if (typeof loc === 'string') return '';
+    return loc.province ?? '';
+  };
+
+  const getDurationStr = (d?: string | number) => {
+    if (d === undefined || d === null) return '';
+    return typeof d === 'number' ? String(d) : d;
+  };
+
+  const filteredExperiences = experiences.filter((experience: LocalExperience) => {
     const matchesSearch = experience.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         experience.location?.city?.toLowerCase().includes(searchQuery.toLowerCase()) || experience.location?.province?.toLowerCase().includes(searchQuery.toLowerCase());
+                         getCity(experience.location).toLowerCase().includes(searchQuery.toLowerCase()) || getProvince(experience.location).toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || experience.category === selectedCategory;
     const matchesDuration = selectedDuration === 'all' || 
-                           (selectedDuration === 'short' && experience.duration.includes('hora')) ||
-                           (selectedDuration === 'long' && experience.duration.includes('dia'));
+                           (selectedDuration === 'short' && getDurationStr(experience.duration).includes('hora')) ||
+                           (selectedDuration === 'long' && getDurationStr(experience.duration).includes('dia'));
     const matchesPrice = selectedPrice === 'all' ||
-                        (selectedPrice === 'budget' && experience.price < 50000) ||
-                        (selectedPrice === 'mid' && experience.price >= 50000 && experience.price < 100000) ||
-                        (selectedPrice === 'luxury' && experience.price >= 100000);
+                        (selectedPrice === 'budget' && (experience.price ?? 0) < 50000) ||
+                        (selectedPrice === 'mid' && (experience.price ?? 0) >= 50000 && (experience.price ?? 0) < 100000) ||
+                        (selectedPrice === 'luxury' && (experience.price ?? 0) >= 100000);
     
     return matchesSearch && matchesCategory && matchesDuration && matchesPrice;
   });
@@ -240,12 +255,12 @@ export default function ExperiencesPage() {
   const toggleFavorite = (experienceId: string) => {
     setFavorites(prev => 
       prev.includes(experienceId) 
-        ? prev.filter((id: any) => id !== experienceId)
+          ? prev.filter((id: string) => id !== experienceId)
         : [...prev, experienceId]
     );
   };
   
-  const renderExperienceCard = (experience: any, index: number) => (
+  const renderExperienceCard = (experience: LocalExperience, index: number) => (
     <motion.div
       key={experience.id}
       initial={{ opacity: 0, y: 20 }}
@@ -279,7 +294,7 @@ export default function ExperiencesPage() {
             </button>
           </div>
           
-          {experience.host.superhost && (
+          {experience.host?.superhost && (
             <div className="absolute top-3 left-3 bg-white/90 px-2 py-1 rounded-full">
               <div className="flex items-center">
                 <Star className="fill-yellow-400 text-yellow-400 mr-1" size={12} />
@@ -297,7 +312,7 @@ export default function ExperiencesPage() {
               </h3>
               <div className="flex items-center text-sm text-gray-600 mb-2">
                 <MapPin size={14} className="mr-1" />
-                <span>{experience.location?.city}, {experience.location?.province}</span>
+                <span>{getCity(experience.location)}{getProvince(experience.location) ? ', ' + getProvince(experience.location) : ''}</span>
               </div>
             </div>
           </div>
@@ -326,7 +341,7 @@ export default function ExperiencesPage() {
             
             <div className="text-right">
               <span className="text-lg font-bold text-gray-900">
-                {experience.price.toLocaleString()}
+                {(experience.price ?? 0).toLocaleString()}
               </span>
               <span className="text-sm text-gray-600 ml-1">AOA</span>
             </div>
@@ -335,7 +350,7 @@ export default function ExperiencesPage() {
           {viewMode === 'list' && (
             <div className="mt-4">
               <div className="flex flex-wrap gap-2 mb-3">
-                {experience.highlights.slice(0, 3).map((highlight: any, idx: number) => (
+                {(experience.highlights ?? []).slice(0, 3).map((highlight: string, idx: number) => (
                   <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                     {highlight}
                   </span>
@@ -434,7 +449,7 @@ export default function ExperiencesPage() {
           </div>
           
           <div className="flex flex-wrap gap-3">
-            {categories.map((category: any) => {
+            {categories.map((category: Category) => {
               const Icon = category.icon;
               return (
                 <button
@@ -533,7 +548,7 @@ export default function ExperiencesPage() {
         
         {/* Experiences Grid/List */}
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-0'}>
-          {filteredExperiences.map((experience: any, index: number) => 
+          {filteredExperiences.map((experience: LocalExperience, index: number) => 
             renderExperienceCard(experience, index)
           )}
         </div>
