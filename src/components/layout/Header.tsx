@@ -15,7 +15,8 @@ import {
   Bell,
   Settings,
   LogOut,
-  MapPin
+  MapPin,
+  ChevronDown
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -24,14 +25,36 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
+  const [isBenefitsMenuOpen, setIsBenefitsMenuOpen] = useState(false);
   const pathname = usePathname();
   
   const navigation = [
-    { name: 'Início', href: '/', current: pathname === '/' },
-    { name: 'Hospedagens', href: '/search?type=accommodation', current: pathname.startsWith('/search') },
-    { name: 'Experiências', href: '/experiences', current: pathname.startsWith('/experiences') },
-    { name: 'Roteiros IA', href: '/itinerary', current: pathname.startsWith('/itinerary') },
-    { name: 'Comparador', href: '/compare', current: pathname.startsWith('/compare') },
+    { name: 'Home', href: '/', current: pathname === '/' },
+    { 
+      name: 'Our products', 
+      href: '#', 
+      current: false,
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Properties', href: '/properties' },
+        { name: 'Apartments', href: '/apartments' },
+        { name: 'Resorts', href: '/resorts' },
+        { name: 'Tourism', href: '/tourism' },
+      ]
+    },
+    { 
+      name: 'Benefits avaliables to partners', 
+      href: '#', 
+      current: false,
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Partner Benefits', href: '/benefits' },
+        { name: 'Commission Structure', href: '/commission' },
+        { name: 'Support', href: '/support' },
+      ]
+    },
+    { name: 'Partners', href: '/partners', current: pathname.startsWith('/partners') },
   ];
   
   const languages = [
@@ -50,53 +73,98 @@ const Header: React.FC = () => {
   ];
   
   return (
-    <header className="bg-white shadow-soft sticky top-0 z-50">
+    <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">A</span>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">R</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xl font-bold text-blue-600">Reside.ao</span>
+                  <span className="text-xs text-orange-500 -mt-1">Descubra Angola, Viva Angola</span>
+                </div>
               </div>
-              <span className="text-xl font-bold text-gray-900 hidden sm:block">
-                Angola Travel
-              </span>
             </Link>
           </div>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  item.current
-                    ? 'text-primary-600 bg-primary-50'
-                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                }`}
-              >
-                {item.name}
-              </Link>
+              <div key={item.name} className="relative">
+                {item.hasDropdown ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        if (item.name === 'Our products') {
+                          setIsProductsMenuOpen(!isProductsMenuOpen);
+                          setIsBenefitsMenuOpen(false);
+                        } else if (item.name === 'Benefits avaliables to partners') {
+                          setIsBenefitsMenuOpen(!isBenefitsMenuOpen);
+                          setIsProductsMenuOpen(false);
+                        }
+                      }}
+                      className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown size={16} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {(item.name === 'Our products' && isProductsMenuOpen) || 
+                       (item.name === 'Benefits avaliables to partners' && isBenefitsMenuOpen) ? (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
+                        >
+                          {item.dropdownItems?.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.name}
+                              href={dropdownItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                              onClick={() => {
+                                setIsProductsMenuOpen(false);
+                                setIsBenefitsMenuOpen(false);
+                              }}
+                            >
+                              {dropdownItem.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      ) : null}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`px-3 py-2 text-sm font-medium transition-colors ${
+                      item.current
+                        ? 'text-blue-600'
+                        : 'text-gray-700 hover:text-blue-600'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+              </div>
             ))}
           </nav>
           
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            {/* Search Button - Mobile */}
-            <button className="md:hidden p-2 text-gray-600 hover:text-primary-600 transition-colors">
-              <Search size={20} />
-            </button>
-            
             {/* Language Selector */}
             <div className="relative">
               <button
                 onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
-                className="flex items-center space-x-1 p-2 text-gray-600 hover:text-primary-600 transition-colors"
+                className="flex items-center space-x-1 p-2 text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <Globe size={20} />
-                <span className="hidden sm:block text-sm">PT</span>
+                <span className="text-sm font-medium">EN</span>
+                <ChevronDown size={16} />
               </button>
               
               <AnimatePresence>
@@ -105,7 +173,7 @@ const Header: React.FC = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-medium border border-gray-100 py-2 z-50"
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
                   >
                     {languages.map((lang) => (
                       <button
@@ -122,71 +190,16 @@ const Header: React.FC = () => {
               </AnimatePresence>
             </div>
             
-            {/* Host Link */}
-            <Link
-              href="/host"
-              className="hidden sm:block text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
-            >
-              Seja um Anfitrião
-            </Link>
-            
-            {/* User Menu */}
-            <div className="relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 p-2 border border-gray-300 rounded-full hover:shadow-md transition-all"
-              >
-                <Menu size={16} className="text-gray-600" />
-                <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-white" />
-                </div>
-              </button>
-              
-              <AnimatePresence>
-                {isUserMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-medium border border-gray-100 py-2 z-50"
-                  >
-                    <div className="px-4 py-3 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">João Silva</p>
-                      <p className="text-sm text-gray-500">joao@email.com</p>
-                    </div>
-                    
-                    <div className="py-2">
-                      {userMenuItems.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            <Icon size={16} />
-                            <span>{item.name}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                    
-                    <div className="border-t border-gray-100 pt-2">
-                      <button className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left">
-                        <LogOut size={16} />
-                        <span>Sair</span>
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            {/* Login Button */}
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 flex items-center space-x-2">
+              <User size={16} />
+              <span>Fazer login</span>
+            </Button>
             
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-600 hover:text-primary-600 transition-colors"
+              className="md:hidden p-2 text-gray-600 hover:text-blue-600 transition-colors"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -205,29 +218,34 @@ const Header: React.FC = () => {
           >
             <div className="px-4 py-4 space-y-2">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`block px-3 py-2 rounded-lg text-base font-medium transition-colors ${
-                    item.current
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
+                <div key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={`block px-3 py-2 rounded-lg text-base font-medium transition-colors ${
+                      item.current
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                  {item.hasDropdown && item.dropdownItems && (
+                    <div className="ml-4 space-y-1">
+                      {item.dropdownItems.map((dropdownItem) => (
+                        <Link
+                          key={dropdownItem.name}
+                          href={dropdownItem.href}
+                          className="block px-3 py-1 text-sm text-gray-600 hover:text-blue-600"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {dropdownItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
-              
-              <div className="pt-4 border-t border-gray-100">
-                <Link
-                  href="/host"
-                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Seja um Anfitrião
-                </Link>
-              </div>
             </div>
           </motion.div>
         )}

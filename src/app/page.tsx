@@ -1,324 +1,223 @@
-// Homepage principal da plataforma de turismo de Angola
-
+// Reside.ao - Página Principal
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   Search,
   MapPin,
-  Calendar,
-  Users,
-  Star,
-  ArrowRight,
-  Play,
+  Home,
   Heart,
-  Award,
-  Globe,
-  Camera,
-  Mountain,
-  Waves,
-  TreePine,
+  Star,
   Building,
-  Compass,
-  TrendingUp,
-  Clock,
-  Shield
+  Utensils,
+  Car,
+  Hotel,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUp,
+  Share2,
+  Phone,
+  ArrowRight,
+  ChevronDown,
 } from 'lucide-react';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockProperties, mockExperiences, mockUsers } from '@/data/mockData';
-import { cn, formatCurrency, formatRating } from '@/utils';
-import type { Property, Experience, User } from '@/types';
 
 // Componente Hero Section
 const HeroSection: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState('');
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
-  const [guests, setGuests] = useState('2');
-  const [activeTab, setActiveTab] = useState('stays');
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState('Compra');
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (location) params.set('location', location);
-    if (checkIn) params.set('checkIn', checkIn);
-    if (checkOut) params.set('checkOut', checkOut);
-    if (guests) params.set('guests', guests);
-    if (searchQuery) params.set('q', searchQuery);
-    
-    const url = activeTab === 'experiences' ? '/experiences' : '/search';
-    router.push(`${url}?${params.toString()}`);
+  const handleSearch = () => {
+    console.log('Busca realizada');
   };
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-      {/* Background com gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-orange-500" />
-      <div className="absolute inset-0 bg-black/20" />
-      
-      {/* Padrão decorativo */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-32 h-32 border border-white rounded-full" />
-        <div className="absolute top-40 right-32 w-24 h-24 border border-white rounded-full" />
-        <div className="absolute bottom-32 left-1/4 w-16 h-16 border border-white rounded-full" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image - Living Room */}
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&h=1080&fit=crop"
+          alt="Living Room Interior"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 text-center">
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 text-white">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
+          {/* Left Content */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto"
+            className="space-y-8"
         >
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Descubra as Maravilhas de
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-              Angola
-            </span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+              Descubra Angola, viva Angola
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Encontre acomodações únicas, experiências autênticas e crie memórias inesquecíveis
-            no coração da África.
-          </p>
+            <p className="text-xl md:text-2xl text-gray-200">
+              Residência e turismo de um jeito facil.
+            </p>
+            <p className="text-lg text-gray-300">
+              Willingness to solve problems presented by farmers.
+            </p>
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
+              know more about us →
+           </Button>
+        </motion.div>
 
-          {/* Formulário de busca */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto"
-          >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="stays" className="flex items-center space-x-2">
-                  <Building className="w-4 h-4" />
-                  <span>Acomodações</span>
+          {/* Right Content - Search Form */}
+        <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+            className="bg-white rounded-2xl p-8 shadow-2xl"
+        >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg">
+                <TabsTrigger 
+                  value="Compra" 
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === 'Compra' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Compra
                 </TabsTrigger>
-                <TabsTrigger value="experiences" className="flex items-center space-x-2">
-                  <Compass className="w-4 h-4" />
-                  <span>Experiências</span>
+                <TabsTrigger 
+                  value="Aluguel"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === 'Aluguel' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Aluguel
                 </TabsTrigger>
-              </TabsList>
-
-              <form onSubmit={handleSearch}>
-                <TabsContent value="stays" className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="md:col-span-1">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Destino
-                      </label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="text"
-                          placeholder="Luanda, Benguela..."
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
+                <TabsTrigger 
+                  value="Risorte"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === 'Risorte' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Risorte
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="Turismo"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === 'Turismo' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Turismo
+                </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value={activeTab}>
+                <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input 
+                        type="text" 
+                        placeholder="Busque por cidade"
+                        className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Check-in
-                      </label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="date"
-                          value={checkIn}
-                          onChange={(e) => setCheckIn(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Check-out
-                      </label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="date"
-                          value={checkOut}
-                          onChange={(e) => setCheckOut(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hóspedes
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="number"
-                          min="1"
-                          max="16"
-                          value={guests}
-                          onChange={(e) => setGuests(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
+                  <div className="relative">
+                      <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input 
+                        type="text" 
+                        placeholder="Busque por Bairro"
+                        className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
                   </div>
-                </TabsContent>
-
-                <TabsContent value="experiences" className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        O que você quer fazer?
-                      </label>
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="text"
-                          placeholder="Safari, culinária, cultura..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localização
-                      </label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="text"
-                          placeholder="Qualquer lugar"
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data
-                      </label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          type="date"
-                          value={checkIn}
-                          onChange={(e) => setCheckIn(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
+                  <div className="relative">
+                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <select className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option>Valor total ate</option>
+                        <option>Até 50.000 Kz</option>
+                        <option>Até 100.000 Kz</option>
+                        <option>Até 200.000 Kz</option>
+                        <option>Acima de 200.000 Kz</option>
+                    </select>
                   </div>
-                </TabsContent>
-
-                <Button type="submit" size="lg" className="w-full md:w-auto mt-6">
-                  <Search className="w-4 h-4 mr-2" />
-                  Buscar
-                </Button>
+                  <div className="relative">
+                      <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <select className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option>Numero de quartos</option>
+                      <option>1 quarto</option>
+                      <option>2 quartos</option>
+                        <option>3 quartos</option>
+                        <option>4+ quartos</option>
+                    </select>
+                    </div>
+                </div>
+                
+                <div className="flex items-center space-x-6">
+                  <label className="flex items-center space-x-2">
+                      <input type="radio" name="filter" className="text-blue-600" defaultChecked />
+                    <span className="text-sm text-gray-700">Todos</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                      <input type="radio" name="filter" className="text-blue-600" />
+                    <span className="text-sm text-gray-700">Mais antigos</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                      <input type="radio" name="filter" className="text-blue-600" />
+                    <span className="text-sm text-gray-700">Recentes</span>
+                  </label>
+                </div>
               </form>
-            </Tabs>
-          </motion.div>
+            </TabsContent>
+          </Tabs>
         </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
-// Componente de destinos populares
-const PopularDestinations: React.FC = () => {
-  const destinations = [
-    {
-      name: 'Luanda',
-      image: '/images/luanda.jpg',
-      properties: 245,
-      description: 'Capital vibrante com vida noturna agitada',
-      icon: <Building className="w-5 h-5" />
-    },
-    {
-      name: 'Benguela',
-      image: '/images/benguela.jpg',
-      properties: 89,
-      description: 'Praias paradisíacas e história colonial',
-      icon: <Waves className="w-5 h-5" />
-    },
-    {
-      name: 'Huambo',
-      image: '/images/huambo.jpg',
-      properties: 67,
-      description: 'Montanhas e clima ameno',
-      icon: <Mountain className="w-5 h-5" />
-    },
-    {
-      name: 'Lubango',
-      image: '/images/lubango.jpg',
-      properties: 54,
-      description: 'Paisagens deslumbrantes da Serra da Leba',
-      icon: <TreePine className="w-5 h-5" />
-    }
-  ];
-
+// Seção de Categorias
+const CategoriesSection: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-8 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Destinos Populares
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore os destinos mais procurados em Angola e descubra
-            experiências únicas em cada região.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {destinations.map((destination, index) => (
+        <div className="flex items-center justify-center space-x-8 overflow-x-auto">
+          {[
+            { icon: Building, name: "Hoteis" },
+            { icon: Home, name: "Hospedarias" },
+            { icon: Building, name: "Terrenos" },
+            { icon: Utensils, name: "Restaurantes" },
+            { icon: Hotel, name: "Risort" },
+            { icon: Home, name: "Vivendas" },
+            { icon: Car, name: "Piscir" },
+          ].map((category, index) => (
             <motion.div
-              key={destination.name}
+              key={category.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
+              className="flex flex-col items-center space-y-2 min-w-[100px] cursor-pointer hover:opacity-70 transition-opacity"
             >
-              <Link href={`/search?location=${destination.name}`}>
-                <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="relative h-48 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600" />
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute top-4 left-4 text-white">
-                      {destination.icon}
-                    </div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-xl font-bold mb-1">{destination.name}</h3>
-                      <p className="text-sm opacity-90">{destination.properties} propriedades</p>
-                    </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">
-                      {destination.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                <category.icon className="w-6 h-6 text-gray-600" />
+                </div>
+              <span className="text-sm font-medium text-gray-700">{category.name}</span>
             </motion.div>
           ))}
         </div>
@@ -327,181 +226,474 @@ const PopularDestinations: React.FC = () => {
   );
 };
 
-// Componente de propriedades em destaque
-const FeaturedProperties: React.FC = () => {
-  const featuredProperties = mockProperties.slice(0, 6);
-
+// Seção "Temos para si" - Grid de Categorias
+const WeHaveForYouSection: React.FC = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Acomodações em Destaque
+            className="space-y-8"
+          >
+            <div className="space-y-4">
+              <span className="text-orange-500 text-sm font-medium">01 • Temos para si</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Encontre o melhor de Angola em um unico local.
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Propriedades selecionadas especialmente para você, com as melhores
-            avaliações e experiências únicas.
-          </p>
+            </div>
+            <div className="space-y-4">
+              <p className="text-gray-600 text-lg">
+                Use our built-in analytics dashboard to pull valuable insights and monitor the value of your Krypto portfolio over time. Use our built-in of your Krypto portfolio over time.
+              </p>
+              <Link href="#" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                Learn more
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </Link>
+            </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProperties.map((property, index) => (
+          {/* Right Content - Image Grid */}
             <motion.div
-              key={property.id}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            className="grid grid-cols-3 gap-4 h-96"
+            >
+            {/* Left Column - Full Height */}
+            <div className="relative rounded-2xl overflow-hidden">
+                  <Image
+                src="https://images.unsplash.com/photo-1506905925346-14bda2d0b8e8?w=400&h=600&fit=crop"
+                alt="Resorts"
+                    fill
+                className="object-cover"
+                  />
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-4">
+                <h3 className="font-bold text-lg">Os melhores Risortes</h3>
+                <p className="text-sm">113 Risortes disponiveis</p>
+              </div>
+                  <div className="absolute top-4 right-4">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <ArrowRight className="w-4 h-4 text-gray-600" />
+                </div>
+              </div>
+            </div>
+
+            {/* Middle Column - Two Images */}
+            <div className="space-y-4">
+              <div className="relative rounded-2xl overflow-hidden h-44">
+                <Image
+                  src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=300&fit=crop"
+                  alt="Apartamentos"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3">
+                  <h3 className="font-bold text-sm">Apartamentos</h3>
+                  <p className="text-xs">113 Apartamentos disponiveis</p>
+                </div>
+                <div className="absolute top-2 right-2">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <ArrowRight className="w-3 h-3 text-gray-600" />
+                  </div>
+                </div>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden h-44">
+                <Image
+                  src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop"
+                  alt="Vivendas"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3">
+                  <h3 className="font-bold text-sm">Vivendas</h3>
+                  <p className="text-xs">113 Vivendas disponiveis</p>
+                </div>
+                <div className="absolute top-2 right-2">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <ArrowRight className="w-3 h-3 text-gray-600" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Full Height */}
+            <div className="relative rounded-2xl overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=600&fit=crop"
+                alt="Turismo"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-4">
+                <h3 className="font-bold text-lg">Os melhores locais para turismo</h3>
+                <p className="text-sm">113 Locais para turismo disponiveis</p>
+              </div>
+              <div className="absolute top-4 right-4">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <ArrowRight className="w-4 h-4 text-gray-600" />
+                </div>
+              </div>
+                  </div>
+            </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Seção de Aluguel de Apartamentos
+const ApartmentRentalSection: React.FC = () => {
+  const [showShareModal, setShowShareModal] = useState(false);
+
+  return (
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <span className="text-orange-500 text-sm font-medium">02 • Aluguel de casas, apartamento</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
+              Apartamentos perto de si
+          </h2>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=300&fit=crop",
+              title: "Apartamento 2º andar",
+              price: "8.000 Kz/h",
+              inclusion: "Direito a pequeno Almoço",
+              bedrooms: 2,
+              bathrooms: 2,
+              broker: {
+                name: "Maria Kaniki",
+                phone: "+244 923 000 000",
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face"
+              }
+            },
+            {
+              image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop",
+              title: "Apartamento 5º andar",
+              price: "12.000 Kz/h",
+              inclusion: "Direito a pequeno Almoço",
+              bedrooms: 3,
+              bathrooms: 4,
+              broker: {
+                name: "Gelson Mesquita",
+                phone: "+244 923 000 000",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+              }
+            },
+            {
+              image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=300&fit=crop",
+              title: "Apartamento 3º andar",
+              price: "6.000 Kz/h",
+              inclusion: "Direito a pequeno Almoço",
+              bedrooms: 1,
+              bathrooms: 2,
+              broker: {
+                name: "Nelson Veloso",
+                phone: "+244 923 000 000",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+              }
+            },
+            {
+              image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
+              title: "Apartamento 4º andar",
+              price: "8.000 Kz/h",
+              inclusion: "Direito a pequeno Almoço",
+              bedrooms: 2,
+              bathrooms: 2,
+              broker: {
+                name: "Marta Kissame",
+                phone: "+244 923 000 000",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face"
+              }
+            },
+          ].map((apartment, index) => (
+            <motion.div
+              key={apartment.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
+              className="relative group"
             >
-              <Link href={`/property/${property.id}`}>
-                <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="relative h-48 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-blue-600" />
-                    <div className="absolute top-4 right-4">
-                      <Button size="icon" variant="secondary" className="rounded-full">
-                        <Heart className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-yellow-500 text-yellow-900">
-                        <Award className="w-3 h-3 mr-1" />
-                        Destaque
-                      </Badge>
-                    </div>
+              <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+                <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={apartment.image}
+                      alt={apartment.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  <div className="absolute top-4 right-4 flex space-x-2">
+                    <button className="p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
+                      <Heart className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button 
+                      onClick={() => setShowShareModal(true)}
+                      className="p-2 bg-white/80 hover:bg-white rounded-full transition-colors"
+                    >
+                      <ArrowUp className="w-4 h-4 text-gray-600" />
+                    </button>
                   </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-lg line-clamp-1">
-                        {property.title}
-                      </h3>
-                      <div className="flex items-center space-x-1 text-sm">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span>{formatRating(property.rating)}</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2 flex items-center">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {property.location?.city}, {property.location?.province}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                      {property.description}
-                    </p>
-                    <div className="flex items-center justify-between">
+                  <div className="absolute bottom-4 left-4 right-4 flex space-x-1">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg mb-2">{apartment.title}</h3>
+                  <p className="text-2xl font-bold text-blue-600 mb-2">{apartment.price}</p>
+                  <p className="text-sm text-gray-600 mb-4">{apartment.inclusion}</p>
+                  
+                  <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                    <span className="flex items-center">
+                      <Home className="w-4 h-4 mr-1" />
+                      {apartment.bedrooms} Quartos
+                    </span>
+                    <span className="flex items-center">
+                      <Building className="w-4 h-4 mr-1" />
+                      {apartment.bathrooms} Banheiros
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-600">Corretor</span>
+                      <Image
+                        src={apartment.broker.avatar}
+                        alt={apartment.broker.name}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
                       <div>
-                        <span className="text-lg font-bold">
-                          {formatCurrency(property.pricePerNight)}
-                        </span>
-                        <span className="text-sm text-muted-foreground">/noite</span>
+                        <p className="text-sm font-medium">{apartment.broker.name}</p>
+                        <p className="text-xs text-gray-500">{apartment.broker.phone}</p>
                       </div>
-                      <Badge variant="outline">{property.type}</Badge>
+                    </div>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <Share2 className="w-4 h-4 text-gray-600" />
+                    </button>
                     </div>
                   </CardContent>
-                </Card>
-              </Link>
+              </Card>
             </motion.div>
           ))}
         </div>
-
-        <div className="text-center mt-8">
-          <Button asChild size="lg">
-            <Link href="/search">
-              Ver todas as acomodações
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold">Compartilhe com quem adoras</h3>
+              <button 
+                onClick={() => setShowShareModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { name: "Copiar Link", icon: Share2 },
+                { name: "WatsApp", icon: Phone },
+                { name: "Facebook", icon: Building },
+                { name: "Twitter", icon: Building },
+                { name: "Instagram", icon: Building },
+                { name: "E-mail", icon: Building },
+              ].map((item) => (
+                <button
+                  key={item.name}
+                  className="flex items-center space-x-2 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <item.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{item.name}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };
 
-// Componente de experiências
-const FeaturedExperiences: React.FC = () => {
-  const featuredExperiences = mockExperiences.slice(0, 4);
-
+// Seção de Serviços
+const ServicesSection: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Experiências Únicas
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Viva momentos inesquecíveis com experiências autênticas
-            guiadas por locais apaixonados por Angola.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredExperiences.map((experience, index) => (
-            <motion.div
-              key={experience.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Link href={`/experiences/${experience.id}`}>
-                <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="relative h-40 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600" />
-                    <div className="absolute top-4 right-4">
-                      <Button size="icon" variant="secondary" className="rounded-full">
-                        <Heart className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <Badge className="bg-white/20 text-white border-white/30">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {experience.duration}
-                      </Badge>
-                    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <div className="space-y-4">
+              <span className="text-orange-500 text-sm font-medium">03 • Nossos serviços</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Temos para si os melhores serviços do mercado.
+              </h2>
+            </div>
+            
+            <div className="space-y-6">
+              {[1, 2, 3].map((item, index) => (
+                <div key={index} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
+                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Building className="w-6 h-6 text-gray-600" />
                   </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2 line-clamp-2">
-                      {experience.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-2 flex items-center">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {experience.location?.city}, {experience.location?.province}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Temos para si os melhores</h3>
+                    <p className="text-gray-600">
+                      Use our built-in analytics dashboard to pull valuable insights and monitor the value of your Krypto portfolio over time. Use our built-in of your Krypto portfolio over time.
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1 text-sm">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span>{formatRating(experience.rating)}</span>
-                        <span className="text-muted-foreground">({experience.reviewCount})</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-bold">
-                          {formatCurrency(experience.price)}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="relative h-96 rounded-2xl overflow-hidden"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1506905925346-14bda2d0b8e8?w=600&h=400&fit=crop"
+              alt="Serviços Angola"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-6">
+              <p className="text-sm">
+                Use our built-in analytics dashboard to pull valuable insights and monitor the value of your Krypto portfolio over time. Use our built-in of your Krypto portfolio over time.
+              </p>
+            </div>
+          </motion.div>
         </div>
+      </div>
+    </section>
+  );
+};
 
-        <div className="text-center mt-8">
-          <Button asChild size="lg">
-            <Link href="/experiences">
-              Ver todas as experiências
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+// Seção de Turismo
+const TourismSection: React.FC = () => {
+  return (
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <div className="space-y-4">
+              <span className="text-orange-500 text-sm font-medium">04 • Turismo</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Encontre o melhor de Angola em um unico local.
+              </h2>
+            </div>
+            <div className="space-y-4">
+              <p className="text-gray-600 text-lg">
+                Use our built-in analytics dashboard to pull valuable insights and monitor the value of your Krypto portfolio over time. Use our built-in of your Krypto portfolio over time.
+              </p>
+              <Link href="#" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                Learn more +
+              </Link>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-3 gap-4"
+          >
+            {[
+              {
+                image: "https://images.unsplash.com/photo-1506905925346-14bda2d0b8e8?w=300&h=400&fit=crop",
+                title: "Barra do Kwanza",
+                date: "24.OUT.2024 - 28.OUT.2024",
+                price: "18.000Kz",
+                rating: "4,9"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&h=400&fit=crop",
+                title: "Barra do Kwanza",
+                date: "24.OUT.2024 - 28.OUT.2024",
+                price: "18.000Kz",
+                rating: "4,9"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=400&fit=crop",
+                title: "Barra do Kwanza",
+                date: "24.OUT.2024 - 28.OUT.2024",
+                price: "18.000Kz",
+                rating: "4,9"
+              },
+            ].map((destination, index) => (
+              <div key={index} className="relative rounded-2xl overflow-hidden group">
+                <Image
+                  src={destination.image}
+                  alt={destination.title}
+                  width={300}
+                  height={400}
+                  className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4 flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                    <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 flex items-center space-x-1">
+                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                  <span className="text-white text-sm font-medium">{destination.rating}</span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-4">
+                  <p className="text-sm">{destination.date}</p>
+                  <h3 className="font-bold text-lg">{destination.title}</h3>
+                  <p className="text-xl font-bold">{destination.price}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+        
+        <div className="text-center mt-12">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-lg">
+            know more about us →
           </Button>
         </div>
       </div>
@@ -509,95 +701,236 @@ const FeaturedExperiences: React.FC = () => {
   );
 };
 
-// Componente de estatísticas
-const StatsSection: React.FC = () => {
-  const stats = [
-    {
-      icon: <Building className="w-8 h-8" />,
-      value: '1,200+',
-      label: 'Acomodações',
-      description: 'Propriedades verificadas'
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      value: '50,000+',
-      label: 'Viajantes',
-      description: 'Experiências criadas'
-    },
-    {
-      icon: <Star className="w-8 h-8" />,
-      value: '4.8',
-      label: 'Avaliação média',
-      description: 'De satisfação'
-    },
-    {
-      icon: <Shield className="w-8 h-8" />,
-      value: '100%',
-      label: 'Segurança',
-      description: 'Pagamentos protegidos'
-    }
+// Seção "Melhores serviços" (05)
+const BestServicesSection: React.FC = () => {
+  return (
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <div className="space-y-4">
+              <span className="text-orange-500 text-sm font-medium">05 • Melhores serviços</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Encontre o melhor de Angola em um unico local.
+              </h2>
+            </div>
+            <div className="space-y-4">
+              <p className="text-gray-600 text-lg">
+                Use our built-in analytics dashboard to pull valuable insights and monitor the value of your Krypto portfolio over time. Use our built-in of your Krypto portfolio over time.
+              </p>
+              <Link href="#" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                Learn more +
+              </Link>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 gap-4 h-96"
+          >
+            {/* Left Column - Full Height Event Hall */}
+            <div className="relative rounded-2xl overflow-hidden group">
+              <Image
+                src="https://images.unsplash.com/photo-1519167758481-83f1426e4b2e?w=400&h=600&fit=crop"
+                alt="Event Hall"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute top-4 right-4">
+                <div className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                  <ArrowRight className="w-4 h-4 text-gray-600" />
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-4">
+                <h3 className="font-bold text-lg">Os melhores Salões de Eventos</h3>
+                <p className="text-sm">113 Salões disponiveis</p>
+              </div>
+            </div>
+
+            {/* Right Column - Two Images Stacked */}
+            <div className="space-y-4">
+              {/* Top Right - Restaurant */}
+              <div className="relative rounded-2xl overflow-hidden h-44 group">
+                <Image
+                  src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop"
+                  alt="Restaurant"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-2 right-2">
+                  <div className="w-6 h-6 bg-white/80 rounded-full flex items-center justify-center">
+                    <ArrowRight className="w-3 h-3 text-gray-600" />
+                  </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3">
+                  <h3 className="font-bold text-sm">Os melhores Restaurantes</h3>
+                  <p className="text-xs">113 Risortes disponiveis</p>
+                </div>
+              </div>
+
+              {/* Bottom Right - Land */}
+              <div className="relative rounded-2xl overflow-hidden h-44 group">
+                <Image
+                  src="https://images.unsplash.com/photo-1506905925346-14bda2d0b8e8?w=400&h=300&fit=crop"
+                  alt="Land"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-2 right-2">
+                  <div className="w-6 h-6 bg-white/80 rounded-full flex items-center justify-center">
+                    <ArrowRight className="w-3 h-3 text-gray-600" />
+                  </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3">
+                  <h3 className="font-bold text-sm">Os melhores Terrenos</h3>
+                  <p className="text-xs">113 Risortes disponiveis</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Seção FAQ e Avaliações (06)
+const FAQAndReviewsSection: React.FC = () => {
+  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+
+  const faqItems = [
+    "Como usar fertilizantes?",
+    "O que fazer em casos de estress dos gados?",
+    "Como posso aderir aos serviços?",
+    "Em quanto tempo leva o tratamento do solo?",
+    "Como posso aderir aos serviços?",
+    "Em quanto tempo leva o tratamento do solo?"
   ];
 
   return (
-    <section className="py-16 bg-primary text-primary-foreground">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
+        {/* FAQ Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Números que Inspiram Confiança
-          </h2>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
-            Milhares de viajantes já descobriram Angola conosco.
-            Junte-se a esta comunidade apaixonada por aventuras.
-          </p>
+          <div className="text-center mb-12">
+            <span className="text-orange-500 text-sm font-medium">06 • Perguntas frequentes</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2">
+              Perguntas mais frequentes
+            </h2>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-4">
+            {faqItems.map((question, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gray-100 rounded-lg p-4 cursor-pointer hover:bg-gray-200 transition-colors"
+                onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-700 font-medium">{question}</span>
+                  <ChevronDown 
+                    className={`w-5 h-5 text-gray-500 transition-transform ${
+                      expandedFAQ === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+                {expandedFAQ === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-4 pt-4 border-t border-gray-200"
+                  >
+                    <p className="text-gray-600">
+                      Esta é uma resposta de exemplo para a pergunta "{question}". 
+                      Aqui você pode fornecer informações detalhadas sobre o tópico.
+                    </p>
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="flex justify-center mb-4 text-primary-foreground/80">
-                {stat.icon}
-              </div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">
-                {stat.value}
-              </div>
-              <div className="text-lg font-semibold mb-1">
-                {stat.label}
-              </div>
-              <div className="text-sm opacity-80">
-                {stat.description}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {/* Reviews Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="bg-gray-100 rounded-2xl p-8 max-w-4xl mx-auto"
+        >
+          <div className="text-center mb-8">
+            <span className="text-orange-500 text-sm font-medium">06 • Avaliações</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2">
+              O que os nossos cliente dizem
+            </h2>
+          </div>
+
+          <div className="flex items-center justify-between mb-8">
+            <button className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors">
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+            <button className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
+          </div>
+
+          <div className="text-center">
+            <p className="text-gray-600 text-lg mb-8 max-w-3xl mx-auto">
+              Ate ao momento tenho tido bons resultados, agradeço muito pelos serviços que têm prestado, 
+              consegui alavancar os meus lucros em um curto tempo e ainda vender produtos de qualidade
+            </p>
+            
+            <div className="flex flex-col items-center">
+              <Image
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face"
+                alt="Marcus Candida"
+                width={60}
+                height={60}
+                className="rounded-full mb-4"
+              />
+              <h3 className="text-lg font-semibold text-gray-900">Marcus Candida</h3>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
-// Componente principal da homepage
-const HomePage: React.FC = () => {
+
+// Componente principal da página
+export default function HomePage() {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <PopularDestinations />
-      <FeaturedProperties />
-      <FeaturedExperiences />
-      <StatsSection />
+      <CategoriesSection />
+      <WeHaveForYouSection />
+      <ApartmentRentalSection />
+      <ServicesSection />
+      <TourismSection />
+      <BestServicesSection />
+      <FAQAndReviewsSection />
     </div>
   );
-};
-
-export default HomePage;
+}
