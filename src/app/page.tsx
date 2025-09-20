@@ -33,9 +33,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 const HeroSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Compra');
 
-  const handleSearch = () => {
-    console.log('Busca realizada');
-  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -48,144 +45,230 @@ const HeroSection: React.FC = () => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
-          {/* Left Content */}
+      <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4">
         <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-            className="space-y-8"
         >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              Descubra Angola, viva Angola
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
+            Descubra Angola,<br />
+            viva Angola
           </h1>
-            <p className="text-xl md:text-2xl text-gray-200">
-              Residência e turismo de um jeito facil.
-            </p>
-            <p className="text-lg text-gray-300">
-              Willingness to solve problems presented by farmers.
-            </p>
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
-              know more about us →
-           </Button>
+          <p className="text-2xl md:text-3xl mb-8 text-gray-100">
+            Residência e turismo de um jeito facil.
+          </p>
+          <p className="text-lg mb-12 text-gray-200 max-w-2xl mx-auto">
+            Willingness to solve problems presented by farmers.
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg"
+          >
+            know more about us →
+          </Button>
         </motion.div>
+      </div>
 
-          {/* Right Content - Search Form */}
+      {/* Navigation Bar */}
+      <div 
+        className="absolute"
+        style={{ 
+          left: '50%',
+          top: 'calc(100vh - 300px)', 
+          width: '815px', 
+          height: '53px',
+          background: 'rgba(0, 0, 0, 0.25)',
+          backdropFilter: 'blur(5px)',
+          borderRadius: '0px 0px 12px 12px',
+          transform: 'translateX(-50%) matrix(1, 0, 0, -1, 0, 0)'
+        }}
+      >
         <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-2xl p-8 shadow-2xl"
+          className="h-full flex items-center justify-start pl-2"
+          style={{ transform: 'matrix(1, 0, 0, -1, 0, 0)' }}
         >
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg">
-                <TabsTrigger 
-                  value="Compra" 
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === 'Compra' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Compra
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="Aluguel"
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === 'Aluguel' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Aluguel
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="Risorte"
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === 'Risorte' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Risorte
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="Turismo"
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === 'Turismo' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Turismo
-                </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value={activeTab}>
-                <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input 
-                        type="text" 
-                        placeholder="Busque por cidade"
-                        className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  <div className="relative">
-                      <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input 
-                        type="text" 
-                        placeholder="Busque por Bairro"
-                        className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                  </div>
-                  <div className="relative">
-                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <select className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Valor total ate</option>
-                        <option>Até 50.000 Kz</option>
-                        <option>Até 100.000 Kz</option>
-                        <option>Até 200.000 Kz</option>
-                        <option>Acima de 200.000 Kz</option>
-                    </select>
-                  </div>
-                  <div className="relative">
-                      <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <select className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Numero de quartos</option>
-                      <option>1 quarto</option>
-                      <option>2 quartos</option>
-                        <option>3 quartos</option>
-                        <option>4+ quartos</option>
-                    </select>
-                    </div>
-                </div>
-                
-                <div className="flex items-center space-x-6">
-                  <label className="flex items-center space-x-2">
-                      <input type="radio" name="filter" className="text-blue-600" defaultChecked />
-                    <span className="text-sm text-gray-700">Todos</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                      <input type="radio" name="filter" className="text-blue-600" />
-                    <span className="text-sm text-gray-700">Mais antigos</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                      <input type="radio" name="filter" className="text-blue-600" />
-                    <span className="text-sm text-gray-700">Recentes</span>
-                  </label>
-                </div>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setActiveTab('Compra')}
+              className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
+                activeTab === 'Compra' 
+                  ? 'bg-white text-orange-500 shadow-lg' 
+                  : 'text-white hover:text-gray-200'
+              }`}
+              style={{
+                direction: 'ltr',
+                unicodeBidi: 'normal'
+              }}
+            >
+              Compra
+            </button>
+            <button
+              onClick={() => setActiveTab('Aluguel')}
+              className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
+                activeTab === 'Aluguel' 
+                  ? 'bg-white text-orange-500 shadow-lg' 
+                  : 'text-white hover:text-gray-200'
+              }`}
+              style={{
+                direction: 'ltr',
+                unicodeBidi: 'normal'
+              }}
+            >
+              Aluguel
+            </button>
+            <button
+              onClick={() => setActiveTab('Resorte')}
+              className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
+                activeTab === 'Resorte' 
+                  ? 'bg-white text-orange-500 shadow-lg' 
+                  : 'text-white hover:text-gray-200'
+              }`}
+              style={{
+                direction: 'ltr',
+                unicodeBidi: 'normal'
+              }}
+            >
+              Resorte
+            </button>
+            <button
+              onClick={() => setActiveTab('Turismo')}
+              className={`px-2 py-2 rounded-t-lg text-sm font-medium transition-all ${
+                activeTab === 'Turismo' 
+                  ? 'bg-white text-orange-500 shadow-lg' 
+                  : 'text-white hover:text-gray-200'
+              }`}
+              style={{
+                direction: 'ltr',
+                unicodeBidi: 'normal'
+              }}
+            >
+              Turismo
+            </button>
+          </div>
         </motion.div>
-        </div>
+      </div>
+
+      {/* Search Component */}
+      <div 
+        className="absolute"
+        style={{ 
+          left: '50%',
+          transform: 'translateX(-50%)',
+          top: 'calc(100vh - 247px)', 
+          width: '815px', 
+          height: '198px',
+          background: '#FFFFFF',
+          borderRadius: '0px 0px 12px 12px'
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full h-full p-8"
+        >
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500" size={18} />
+                <Input 
+                  placeholder="Busque por cidade"
+                  className="pl-10 h-12 text-gray-700 text-base border border-gray-300 focus:border-orange-500 rounded-lg bg-gray-50"
+                />
+              </div>
+              <div className="relative">
+                <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500" size={18} />
+                <Input 
+                  placeholder="Busque por Bairro"
+                  className="pl-10 h-12 text-gray-700 text-base border border-gray-300 focus:border-orange-500 rounded-lg bg-gray-50"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500">
+                  <span className="text-lg font-bold">$</span>
+                </div>
+                <select className="w-full h-12 pl-10 pr-8 text-gray-700 text-base border border-gray-300 focus:border-orange-500 rounded-lg appearance-none bg-gray-50">
+                  <option>Valor total ate</option>
+                  <option>Até 50.000 Kz</option>
+                  <option>Até 100.000 Kz</option>
+                  <option>Até 200.000 Kz</option>
+                  <option>Acima de 200.000 Kz</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              </div>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500">
+                  <span className="text-lg">🛏️</span>
+                </div>
+                <select className="w-full h-12 pl-10 pr-8 text-gray-700 text-base border border-gray-300 focus:border-orange-500 rounded-lg appearance-none bg-gray-50">
+                  <option>Numero de quartos</option>
+                  <option>1 quarto</option>
+                  <option>2 quartos</option>
+                  <option>3 quartos</option>
+                  <option>4+ quartos</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-start space-x-6 pt-2">
+              <label className="flex items-center text-sm text-gray-600 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="filter" 
+                  value="all" 
+                  className="mr-2 w-4 h-4" 
+                  style={{
+                    accentColor: '#f97316',
+                    border: '2px solid #f97316',
+                    borderRadius: '50%'
+                  }}
+                  defaultChecked 
+                />
+                Todos
+              </label>
+              <label className="flex items-center text-sm text-gray-600 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="filter" 
+                  value="oldest" 
+                  className="mr-2 w-4 h-4" 
+                  style={{
+                    accentColor: '#f97316',
+                    border: '2px solid #f97316',
+                    borderRadius: '50%'
+                  }}
+                />
+                Mais antigos
+              </label>
+              <label className="flex items-center text-sm text-gray-600 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="filter" 
+                  value="recent" 
+                  className="mr-2 w-4 h-4" 
+                  style={{
+                    accentColor: '#f97316',
+                    border: '2px solid #f97316',
+                    borderRadius: '50%'
+                  }}
+                />
+                Recentes
+              </label>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
