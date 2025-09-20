@@ -434,68 +434,104 @@ const ApartmentRentalSection: React.FC = () => {
               viewport={{ once: true }}
               className="relative group"
             >
-              <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
-                <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={apartment.image}
-                      alt={apartment.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  <div className="absolute top-4 right-4 flex space-x-2">
-                    <button className="p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
-                      <Heart className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button 
-                      onClick={() => setShowShareModal(true)}
-                      className="p-2 bg-white/80 hover:bg-white rounded-full transition-colors"
-                    >
-                      <ArrowUp className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
-                  <div className="absolute bottom-4 left-4 right-4 flex space-x-1">
+              <div className="w-[296px] h-[513px] bg-white rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.09)] overflow-hidden hover:shadow-lg transition-shadow">
+                {/* Image Carousel */}
+                <div className="relative w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300">
+                  {/* Navigation Arrows */}
+                  <button className="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                    <ChevronLeft size={16} className="text-gray-600" />
+                  </button>
+                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                    <ChevronRight size={16} className="text-gray-600" />
+                  </button>
+                  
+                  {/* Heart Icon */}
+                  <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                    <Heart size={16} className="text-gray-600" />
+                  </button>
+                  
+                  {/* Pagination Dots */}
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="w-2 h-2 bg-white rounded-full"></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{apartment.title}</h3>
-                  <p className="text-2xl font-bold text-blue-600 mb-2">{apartment.price}</p>
+                
+                {/* Property Details */}
+                <div className="p-4">
+                  {/* Title and Share */}
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-medium text-gray-900">{apartment.title}</h3>
+                    <button 
+                      onClick={() => setShowShareModal(true)}
+                      className="p-1 hover:bg-gray-100 rounded"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <polyline points="16,6 12,2 8,6"/>
+                        <line x1="12" y1="2" x2="12" y2="15"/>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  {/* Price */}
+                  <div className="mb-2">
+                    <span className="text-2xl font-bold text-gray-900">
+                      {apartment.price}
+                    </span>
+                    <span className="text-gray-600 text-sm ml-1">Kz/h</span>
+                  </div>
+                  
+                  {/* Inclusions */}
                   <p className="text-sm text-gray-600 mb-4">{apartment.inclusion}</p>
                   
-                  <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
-                    <span className="flex items-center">
-                      <Home className="w-4 h-4 mr-1" />
-                      {apartment.bedrooms} Quartos
-                    </span>
-                    <span className="flex items-center">
-                      <Building className="w-4 h-4 mr-1" />
-                      {apartment.bathrooms} Banheiros
-                    </span>
+                  {/* Separator */}
+                  <div className="border-t border-gray-200 mb-4"></div>
+                  
+                  {/* Property Features */}
+                  <div className="flex items-center space-x-6 mb-4">
+                    <div className="flex items-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400 mr-2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                      </svg>
+                      <span className="text-sm text-gray-500">{apartment.bedrooms} Quartos</span>
+                    </div>
+                    <div className="flex items-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400 mr-2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                      </svg>
+                      <span className="text-sm text-gray-500">{apartment.bathrooms} Banheiros</span>
+                    </div>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-600">Corretor</span>
-                      <Image
-                        src={apartment.broker.avatar}
-                        alt={apartment.broker.name}
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                      />
+                  
+                  {/* Separator */}
+                  <div className="border-t border-gray-200 mb-4"></div>
+                  
+                  {/* Agent Information */}
+                  <div>
+                    <p className="text-xs text-gray-500 mb-2">Corretor</p>
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full mr-3 flex-shrink-0">
+                        <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-medium">{apartment.broker.name.split(' ').map(n => n[0]).join('')}</span>
+                        </div>
+                      </div>
                       <div>
-                        <p className="text-sm font-medium">{apartment.broker.name}</p>
+                        <p className="text-sm font-medium text-gray-900">{apartment.broker.name}</p>
                         <p className="text-xs text-gray-500">{apartment.broker.phone}</p>
                       </div>
                     </div>
-                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                      <Share2 className="w-4 h-4 text-gray-600" />
-                    </button>
-                    </div>
-                  </CardContent>
-              </Card>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

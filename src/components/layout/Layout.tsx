@@ -8,17 +8,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
-  Menu,
-  X,
   User,
-  Heart,
-  Bell,
-  Settings,
-  LogOut,
+  ChevronDown,
   Globe,
-  Sun,
-  Moon,
-  Monitor,
   MapPin,
   Calendar,
   Users,
@@ -26,7 +18,8 @@ import {
   Compass,
   BarChart3,
   MessageCircle,
-  HelpCircle
+  HelpCircle,
+  Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -97,264 +90,173 @@ const navItems: NavItem[] = [
 
 // Componente Header
 const Header: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
+  const [isBenefitsMenuOpen, setIsBenefitsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, logout } = useAuth();
-  const { theme, toggleTheme, isDark } = useTheme();
-
-  // Fechar menu mobile ao mudar de rota
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  // Função para busca
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
-    }
-  };
-
-  // Filtrar itens de navegação baseado no usuário
-  const filteredNavItems = navItems.filter(item => {
-    if (item.requiresAuth && !user) return false;
-    if (item.hostOnly && (!user || user.role !== 'host')) return false;
-    return true;
-  });
-
+  
+  const navigation = [
+    { name: 'Home', href: '/', current: pathname === '/' },
+    { 
+      name: 'Our products', 
+      href: '#', 
+      current: false,
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Properties', href: '/properties' },
+        { name: 'Apartments', href: '/apartments' },
+        { name: 'Resorts', href: '/resorts' },
+        { name: 'Tourism', href: '/tourism' },
+      ]
+    },
+    { 
+      name: 'Benefits avaliables to partners', 
+      href: '#', 
+      current: false,
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Partner Benefits', href: '/benefits' },
+        { name: 'Commission Structure', href: '/commission' },
+        { name: 'Support', href: '/support' },
+      ]
+    },
+    { name: 'Anuncie seu espaço no Reside.ao', href: '/host', current: pathname.startsWith('/host') },
+  ];
+  
+  const languages = [
+    { code: 'pt', name: 'Português', flag: '🇦🇴' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  ];
+  
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+    <header className="fixed top-8 left-1/2 transform -translate-x-1/2 w-[1232px] h-[70px] bg-white shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
+      <div className="flex justify-between items-center h-full px-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <MapPin className="h-4 w-4" />
-            </div>
-            <span className="hidden font-bold sm:inline-block">
-              Angola Tourism
-            </span>
-          </Link>
-
-          {/* Barra de busca - Desktop */}
-          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Buscar destinos, acomodações..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </form>
-
-          {/* Navegação Desktop */}
-          <nav className="hidden md:flex items-center space-x-6">
-            {filteredNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-primary",
-                  pathname === item.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3">
+                {/* Logo Icon with R and orange triangle */}
+                <div className="relative w-8 h-8">
+                  <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">R</span>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-orange-500 transform rotate-45"></div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xl font-bold text-blue-600">Reside.ao</span>
+                  <span className="text-xs text-gray-500 -mt-1">Descubra Angola. Viva Angola</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-6">
+            {navigation.map((item) => (
+              <div key={item.name} className="relative">
+                {item.hasDropdown ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        if (item.name === 'Our products') {
+                          setIsProductsMenuOpen(!isProductsMenuOpen);
+                          setIsBenefitsMenuOpen(false);
+                        } else if (item.name === 'Benefits avaliables to partners') {
+                          setIsBenefitsMenuOpen(!isBenefitsMenuOpen);
+                          setIsProductsMenuOpen(false);
+                        }
+                      }}
+                      className="flex items-center space-x-1 px-2 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown size={14} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {(item.name === 'Our products' && isProductsMenuOpen) || 
+                       (item.name === 'Benefits avaliables to partners' && isBenefitsMenuOpen) ? (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
+                        >
+                          {item.dropdownItems?.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.name}
+                              href={dropdownItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                              onClick={() => {
+                                setIsProductsMenuOpen(false);
+                                setIsBenefitsMenuOpen(false);
+                              }}
+                            >
+                              {dropdownItem.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      ) : null}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`px-2 py-2 text-sm font-medium transition-colors ${
+                      item.current
+                        ? 'text-blue-600'
+                        : 'text-gray-700 hover:text-blue-600'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
                 )}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-                {item.badge && (
-                  <Badge variant="secondary" className="ml-1">
-                    {item.badge}
-                  </Badge>
-                )}
-              </Link>
+              </div>
             ))}
           </nav>
-
-          {/* Ações do usuário */}
-          <div className="flex items-center space-x-2">
-            {/* Toggle de tema */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="hidden sm:flex"
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </Button>
-
-            {user ? (
-              <>
-                {/* Notificações */}
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-4 w-4" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+          
+          {/* Right side */}
+          <div className="flex items-center space-x-6">
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
+                className="flex items-center space-x-1 px-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <span className="text-sm font-medium">EN</span>
+                <ChevronDown size={14} />
+              </button>
+              
+              <AnimatePresence>
+                {isLanguageMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
                   >
-                    3
-                  </Badge>
-                </Button>
-
-                {/* Menu do usuário */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback>{user.name?.charAt(0) || 'U'}</AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard">
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Perfil</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard?tab=favorites">
-                        <Heart className="mr-2 h-4 w-4" />
-                        <span>Favoritos</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard?tab=bookings">
-                        <Calendar className="mr-2 h-4 w-4" />
-                        <span>Reservas</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    {user.role === 'host' && (
-                      <DropdownMenuItem asChild>
-                        <Link href="/host">
-                          <Settings className="mr-2 h-4 w-4" />
-                          <span>Painel do Anfitrião</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Sair</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Button variant="ghost" asChild>
-                  <Link href="/auth/login">Entrar</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/auth/register">Cadastrar</Link>
-                </Button>
-              </div>
-            )}
-
-            {/* Menu mobile */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-4 w-4" />
-              ) : (
-                <Menu className="h-4 w-4" />
-              )}
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3"
+                        onClick={() => setIsLanguageMenuOpen(false)}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="text-sm text-gray-700">{lang.name}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            {/* Login Button */}
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 flex items-center space-x-2 rounded-md">
+              <User size={16} />
+              <span className="text-sm font-medium">Fazer login</span>
             </Button>
           </div>
         </div>
-
-        {/* Menu mobile */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t"
-            >
-              <div className="py-4 space-y-4">
-                {/* Barra de busca mobile */}
-                <form onSubmit={handleSearch} className="px-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      placeholder="Buscar destinos..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                </form>
-
-                {/* Navegação mobile */}
-                <nav className="space-y-2 px-2">
-                  {filteredNavItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                        pathname === item.href
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                      )}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                      {item.badge && (
-                        <Badge variant="secondary" className="ml-auto">
-                          {item.badge}
-                        </Badge>
-                      )}
-                    </Link>
-                  ))}
-                </nav>
-
-                {/* Ações mobile */}
-                <div className="px-2 pt-4 border-t">
-                  <Button
-                    variant="ghost"
-                    onClick={toggleTheme}
-                    className="w-full justify-start"
-                  >
-                    {isDark ? (
-                      <Sun className="mr-2 h-4 w-4" />
-                    ) : (
-                      <Moon className="mr-2 h-4 w-4" />
-                    )}
-                    Alternar tema
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
     </header>
   );
 };
@@ -496,7 +398,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 pt-24">
         {children}
       </main>
       <Footer />
