@@ -397,7 +397,7 @@ export default function SearchPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search Header - Compact */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -405,61 +405,76 @@ export default function SearchPage() {
                   placeholder="Para onde você quer ir?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12"
+                  className="pl-10 h-12 w-full"
                 />
               </div>
             </div>
             
-            <div className="w-40">
-              <Input 
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="h-12"
-              />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full lg:w-auto">
+              <div className="w-full">
+                <Input 
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  className="h-12 w-full"
+                />
+              </div>
+              
+              <div className="w-full">
+                <Input 
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  className="h-12 w-full"
+                />
+              </div>
+              
+              <div className="w-full">
+                <select 
+                  value={guests} 
+                  onChange={(e) => setGuests(Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-3 h-12 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  {[1,2,3,4,5,6,7,8].map(num => (
+                    <option key={num} value={num}>{num} hóspede{num > 1 ? 's' : ''}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="w-full">
+                <Button size="lg" className="h-12 w-full">
+                  <Search size={20} className="mr-2" />
+                  <span className="hidden sm:inline">Buscar</span>
+                </Button>
+              </div>
             </div>
-            
-            <div className="w-40">
-              <Input 
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="h-12"
-              />
-            </div>
-            
-            <div className="w-32">
-              <select 
-                value={guests} 
-                onChange={(e) => setGuests(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-3 h-12 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                {[1,2,3,4,5,6,7,8].map(num => (
-                  <option key={num} value={num}>{num} hóspede{num > 1 ? 's' : ''}</option>
-                ))}
-              </select>
-            </div>
-            
-            <Button size="lg" className="h-12 px-8">
-              <Search size={20} className="mr-2" />
-              Buscar
-            </Button>
           </div>
         </div>
 
-        <div className="flex gap-6">
-          {/* Filters Sidebar - Fixed Width */}
-          <div className="w-72 flex-shrink-0">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Filters Sidebar - Responsive */}
+          <div className="w-full lg:w-72 flex-shrink-0">
             <div className="bg-white rounded-lg shadow-sm p-5 sticky top-4">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-semibold text-gray-900">Filtros</h3>
-                <button 
-                  onClick={clearFilters}
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                >
-                  Limpar
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={clearFilters}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    Limpar
+                  </button>
+                  <button 
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="lg:hidden p-2 text-gray-600 hover:text-gray-700"
+                  >
+                    <ChevronDown size={20} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
               </div>
+              
+              {/* Mobile Collapsible Content */}
+              <div className={`lg:block ${showFilters ? 'block' : 'hidden'}`}>
               
               {/* Price Range */}
               <div className="mb-6">
@@ -582,15 +597,16 @@ export default function SearchPage() {
                   </label>
                 </div>
               </div>
+              </div>
             </div>
           </div>
 
           {/* Main Content */}
           <div className="flex-1">
             {/* Results Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                   {properties.length} propriedades encontradas
                 </h2>
                 {searchQuery && (
@@ -600,12 +616,12 @@ export default function SearchPage() {
                 )}
               </div>
               
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 {/* Sort */}
                 <select 
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm h-9"
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm h-9 w-full sm:w-auto"
                 >
                   {sortOptions.map(option => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -637,11 +653,11 @@ export default function SearchPage() {
             </div>
             
             {/* Properties Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 mb-6 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 lg:gap-2 mb-6 justify-items-center">
               {currentProperties.map((property) => (
                 <div 
                   key={property.id} 
-                  className="w-[296px] h-[513px] bg-white rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.09)] overflow-hidden hover:shadow-lg transition-shadow"
+                  className="w-full max-w-[296px] h-[513px] bg-white rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.09)] overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   {/* Image Carousel */}
                   <div className="relative w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300">
@@ -741,7 +757,7 @@ export default function SearchPage() {
             </div>
             
             {/* Pagination */}
-            <div className="flex items-center justify-center space-x-1">
+            <div className="flex flex-wrap items-center justify-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -750,37 +766,39 @@ export default function SearchPage() {
                 className="h-8 px-3 text-sm"
               >
                 <ChevronLeft size={14} className="mr-1" />
-                Anterior
+                <span className="hidden sm:inline">Anterior</span>
               </Button>
               
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                const page = i + 1;
-                return (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePageChange(page)}
-                    className="w-8 h-8 text-sm"
-                  >
-                    {page}
-                  </Button>
-                );
-              })}
-              
-              {totalPages > 5 && (
-                <>
-                  <span className="text-gray-500 text-sm">...</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(totalPages)}
-                    className="w-8 h-8 text-sm"
-                  >
-                    {totalPages}
-                  </Button>
-                </>
-              )}
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.min(totalPages, window.innerWidth < 640 ? 3 : 5) }, (_, i) => {
+                  const page = i + 1;
+                  return (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(page)}
+                      className="w-8 h-8 text-sm"
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+                
+                {totalPages > (window.innerWidth < 640 ? 3 : 5) && (
+                  <>
+                    <span className="text-gray-500 text-sm">...</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(totalPages)}
+                      className="w-8 h-8 text-sm"
+                    >
+                      {totalPages}
+                    </Button>
+                  </>
+                )}
+              </div>
               
               <Button
                 variant="outline"
@@ -789,7 +807,7 @@ export default function SearchPage() {
                 disabled={currentPage === totalPages}
                 className="h-8 px-3 text-sm"
               >
-                Próximo
+                <span className="hidden sm:inline">Próximo</span>
                 <ChevronRight size={14} className="ml-1" />
               </Button>
             </div>

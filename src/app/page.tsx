@@ -371,7 +371,7 @@ const ApartmentRentalSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {[
             {
               image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=300&fit=crop",
@@ -434,7 +434,7 @@ const ApartmentRentalSection: React.FC = () => {
               viewport={{ once: true }}
               className="relative group"
             >
-              <div className="w-[296px] h-[513px] bg-white rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.09)] overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="w-full max-w-[296px] h-[513px] bg-white rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.09)] overflow-hidden hover:shadow-lg transition-shadow mx-auto">
                 {/* Image Carousel */}
                 <div className="relative w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300">
                   {/* Navigation Arrows */}

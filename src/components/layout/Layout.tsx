@@ -19,7 +19,9 @@ import {
   BarChart3,
   MessageCircle,
   HelpCircle,
-  Settings
+  Settings,
+  Menu,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -36,6 +38,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useUI';
 import { cn } from '@/utils';
+import Footer from './Footer';
 
 // Tipos
 interface LayoutProps {
@@ -93,6 +96,7 @@ const Header: React.FC = () => {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
   const [isBenefitsMenuOpen, setIsBenefitsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   
   const navigation = [
@@ -128,27 +132,27 @@ const Header: React.FC = () => {
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
   ];
-  
+
   return (
-    <header className="fixed top-8 left-1/2 transform -translate-x-1/2 w-[1232px] h-[70px] bg-white shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
-      <div className="flex justify-between items-center h-full px-6">
+    <header className="fixed top-2 sm:top-4 lg:top-8 left-2 sm:left-4 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-[calc(100%-16px)] sm:w-[calc(100%-32px)] lg:w-[1232px] h-[60px] sm:h-[65px] lg:h-[70px] bg-white shadow-[0px_2px_6px_rgba(0,0,0,0.09)] rounded-md z-50">
+      <div className="flex justify-between items-center h-full px-3 sm:px-4 lg:px-6">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 {/* Logo Icon with R and orange triangle */}
-                <div className="relative w-8 h-8">
-                  <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">R</span>
+                <div className="relative w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
+                  <div className="w-full h-full bg-blue-600 rounded flex items-center justify-center">
+                    <span className="text-white font-bold text-sm sm:text-base lg:text-lg">R</span>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-orange-500 transform rotate-45"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 bg-orange-500 transform rotate-45"></div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl font-bold text-blue-600">Reside.ao</span>
-                  <span className="text-xs text-gray-500 -mt-1">Descubra Angola. Viva Angola</span>
+                  <span className="text-lg sm:text-xl font-bold text-blue-600">Reside.ao</span>
+                  <span className="text-xs text-gray-500 -mt-1 hidden sm:block">Descubra Angola. Viva Angola</span>
                 </div>
-              </div>
-            </Link>
+            </div>
+          </Link>
           </div>
           
           {/* Desktop Navigation */}
@@ -198,10 +202,10 @@ const Header: React.FC = () => {
                         </motion.div>
                       ) : null}
                     </AnimatePresence>
-                  </div>
+            </div>
                 ) : (
-                  <Link
-                    href={item.href}
+              <Link
+                href={item.href}
                     className={`px-2 py-2 text-sm font-medium transition-colors ${
                       item.current
                         ? 'text-blue-600'
@@ -214,191 +218,178 @@ const Header: React.FC = () => {
               </div>
             ))}
           </nav>
-          
-          {/* Right side */}
-          <div className="flex items-center space-x-6">
-            {/* Language Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
-                className="flex items-center space-x-1 px-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
-              >
-                <span className="text-sm font-medium">EN</span>
-                <ChevronDown size={14} />
-              </button>
-              
-              <AnimatePresence>
-                {isLanguageMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
-                  >
-                    {languages.map((lang) => (
+
+                  {/* Right side */}
+                  <div className="flex items-center space-x-4 lg:space-x-6">
+                    {/* Language Selector - Hidden on mobile */}
+                    <div className="relative hidden sm:block">
                       <button
-                        key={lang.code}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3"
-                        onClick={() => setIsLanguageMenuOpen(false)}
+                        onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
+                        className="flex items-center space-x-1 px-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
                       >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span className="text-sm text-gray-700">{lang.name}</span>
+                        <span className="text-sm font-medium">EN</span>
+                        <ChevronDown size={14} />
                       </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            
-            {/* Login Button */}
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 flex items-center space-x-2 rounded-md">
-              <User size={16} />
-              <span className="text-sm font-medium">Fazer login</span>
-            </Button>
+
+                      <AnimatePresence>
+                        {isLanguageMenuOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
+                          >
+                            {languages.map((lang) => (
+                              <button
+                                key={lang.code}
+                                className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3"
+                                onClick={() => setIsLanguageMenuOpen(false)}
+                              >
+                                <span className="text-lg">{lang.flag}</span>
+                                <span className="text-sm text-gray-700">{lang.name}</span>
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Login Button - Hidden on mobile */}
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 lg:px-4 flex items-center space-x-2 rounded-md hidden sm:flex">
+                      <User size={16} />
+                      <span className="text-sm font-medium hidden lg:inline">Fazer login</span>
+                    </Button>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                      className="md:hidden p-2 text-gray-600 hover:text-blue-600 transition-colors"
+                    >
+                      {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40"
+            >
+              <div className="px-4 py-6 space-y-4">
+                {/* Mobile Navigation */}
+                <nav className="space-y-2">
+                  {navigation.map((item) => (
+                    <div key={item.name}>
+                      {item.hasDropdown ? (
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => {
+                              if (item.name === 'Our products') {
+                                setIsProductsMenuOpen(!isProductsMenuOpen);
+                                setIsBenefitsMenuOpen(false);
+                              } else if (item.name === 'Benefits avaliables to partners') {
+                                setIsBenefitsMenuOpen(!isBenefitsMenuOpen);
+                                setIsProductsMenuOpen(false);
+                              }
+                            }}
+                            className="flex items-center justify-between w-full px-3 py-2 text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md"
+                          >
+                            <span className="font-medium">{item.name}</span>
+                            <ChevronDown size={16} className={`transition-transform ${(item.name === 'Our products' && isProductsMenuOpen) || (item.name === 'Benefits avaliables to partners' && isBenefitsMenuOpen) ? 'rotate-180' : ''}`} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {((item.name === 'Our products' && isProductsMenuOpen) || 
+                              (item.name === 'Benefits avaliables to partners' && isBenefitsMenuOpen)) && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="ml-4 space-y-1"
+                              >
+                                {item.dropdownItems?.map((dropdownItem) => (
+                                  <Link
+                                    key={dropdownItem.name}
+                                    href={dropdownItem.href}
+                                    className="block px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md"
+                                    onClick={() => {
+                                      setIsProductsMenuOpen(false);
+                                      setIsBenefitsMenuOpen(false);
+                                      setIsMobileMenuOpen(false);
+                                    }}
+                                  >
+                                    {dropdownItem.name}
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                  </div>
+                      ) : (
+                    <Link
+                      href={item.href}
+                          className={`block px-3 py-2 rounded-md font-medium transition-colors ${
+                            item.current
+                              ? 'text-blue-600 bg-blue-50'
+                              : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                          }`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                </nav>
+
+                {/* Mobile Language Selector */}
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium text-gray-700">Idioma</span>
+                    <div className="grid grid-cols-1 gap-2">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          className="flex items-center space-x-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md"
+                          onClick={() => {
+                            setIsLanguageMenuOpen(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <span className="text-lg">{lang.flag}</span>
+                          <span className="text-sm text-gray-700">{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Mobile Login Button */}
+                <div className="pt-4 border-t border-gray-200">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 flex items-center justify-center space-x-2 rounded-md">
+                    <User size={16} />
+                    <span className="font-medium">Fazer login</span>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </header>
   );
 };
 
-// Componente Footer
-const Footer: React.FC = () => {
-  return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Sobre */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <MapPin className="h-4 w-4" />
-              </div>
-              <span className="font-bold">Angola Tourism</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Descubra as maravilhas de Angola. Encontre acomodações únicas, 
-              experiências autênticas e crie memórias inesquecíveis.
-            </p>
-            <div className="flex space-x-4">
-              <Button variant="ghost" size="icon">
-                <Globe className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <MessageCircle className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Links rápidos */}
-          <div className="space-y-4">
-            <h3 className="font-semibold">Explorar</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/search" className="text-muted-foreground hover:text-foreground">
-                  Acomodações
-                </Link>
-              </li>
-              <li>
-                <Link href="/experiences" className="text-muted-foreground hover:text-foreground">
-                  Experiências
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare" className="text-muted-foreground hover:text-foreground">
-                  Comparar preços
-                </Link>
-              </li>
-              <li>
-                <Link href="/destinations" className="text-muted-foreground hover:text-foreground">
-                  Destinos
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Suporte */}
-          <div className="space-y-4">
-            <h3 className="font-semibold">Suporte</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/help" className="text-muted-foreground hover:text-foreground">
-                  Central de ajuda
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
-                  Contato
-                </Link>
-              </li>
-              <li>
-                <Link href="/safety" className="text-muted-foreground hover:text-foreground">
-                  Segurança
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-muted-foreground hover:text-foreground">
-                  Termos de uso
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Para anfitriões */}
-          <div className="space-y-4">
-            <h3 className="font-semibold">Anfitriões</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/host" className="text-muted-foreground hover:text-foreground">
-                  Seja um anfitrião
-                </Link>
-              </li>
-              <li>
-                <Link href="/host/resources" className="text-muted-foreground hover:text-foreground">
-                  Recursos
-                </Link>
-              </li>
-              <li>
-                <Link href="/host/community" className="text-muted-foreground hover:text-foreground">
-                  Comunidade
-                </Link>
-              </li>
-              <li>
-                <Link href="/host/standards" className="text-muted-foreground hover:text-foreground">
-                  Padrões de qualidade
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-8 pt-8 border-t flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            © 2024 Angola Tourism. Todos os direitos reservados.
-          </p>
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
-              Privacidade
-            </Link>
-            <Link href="/cookies" className="text-sm text-muted-foreground hover:text-foreground">
-              Cookies
-            </Link>
-            <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-              <Globe className="h-3 w-3" />
-              <span>Português</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
 
 // Componente Layout principal
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 pt-24">
+      <main className="flex-1 pt-16 sm:pt-20 lg:pt-24">
         {children}
       </main>
       <Footer />
