@@ -9,31 +9,24 @@ import {
   ThumbsUp,
   ThumbsDown,
   MessageSquare,
-  Filter,
   Search,
-  Calendar,
   MapPin,
-  User,
   Home,
   Flag,
   MoreHorizontal,
   Edit,
   Trash2,
   Reply,
-  Heart,
   Share2,
-  TrendingUp,
   Award,
-  CheckCircle,
-  AlertTriangle
+  CheckCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// Tabs not used yet; kept for future
 import {
   Select,
   SelectContent,
@@ -47,8 +40,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from '@/components/ui/dialog';
 import {
   DropdownMenu,
@@ -60,8 +52,8 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { mockReviews, mockUsers, mockProperties, mockBookings } from '@/data/mockData';
-import { formatDate, formatCurrency } from '@/utils';
+import { mockUsers, mockProperties, mockBookings } from '@/data/mockData';
+import { formatDate } from '@/utils';
 
 interface Review {
   id: string;
@@ -108,7 +100,7 @@ interface ReviewStats {
 const ReviewsPage: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('all');
+  // tabs not implemented yet in this page - reserve for future
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [filterRating, setFilterRating] = useState('all');

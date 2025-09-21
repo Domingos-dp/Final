@@ -2,45 +2,9 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ArrowLeft,
-  Share2,
-  Heart,
-  Star,
-  MapPin,
-  Users,
-  Clock,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Plus,
-  Minus,
-  CreditCard,
-  CheckCircle,
-  MessageSquare,
-  Phone,
-  Mail,
-  Globe,
-  Camera,
-  Flag,
-  Info,
-  Shield,
-  Award,
-  Languages,
-  AlertCircle,
-  Thermometer,
-  Umbrella,
-  Mountain,
-  TreePine,
-  Waves,
-  Car,
-  Utensils,
-  Backpack,
-  Compass
-} from 'lucide-react';
+import { Star, MapPin, Users, Clock, CheckCircle, X, Backpack, Flag, Info, Shield, Languages, Camera, Plus, Minus, Mountain, Thermometer, Umbrella, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 interface ExperiencePageProps {
@@ -308,7 +272,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="">Selecione um horário</option>
-              {experience.availableTimes.map((time: any) => (
+              {experience.availableTimes.map((time: string) => (
                 <option key={time} value={time}>{time}</option>
               ))}
             </select>
@@ -433,7 +397,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
       <div>
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Destaques da experiência</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {experience.highlights.map((highlight: any, index: number) => (
+          {experience.highlights.map((highlight: string, index: number) => (
             <div key={index} className="flex items-start">
               <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
               <span className="text-gray-700">{highlight}</span>
@@ -447,7 +411,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-4">O que está incluído</h3>
           <div className="space-y-3">
-            {experience.included.map((item: any, index: number) => (
+            {experience.included.map((item: string, index: number) => (
               <div key={index} className="flex items-start">
                 <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
                 <span className="text-gray-700">{item}</span>
@@ -459,7 +423,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-4">O que não está incluído</h3>
           <div className="space-y-3">
-            {experience.notIncluded.map((item: any, index: number) => (
+            {experience.notIncluded.map((item: string, index: number) => (
               <div key={index} className="flex items-start">
                 <X className="text-red-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
                 <span className="text-gray-700">{item}</span>
@@ -476,7 +440,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
       <h3 className="text-xl font-semibold text-gray-900">Itinerário detalhado</h3>
       
       <div className="space-y-6">
-        {experience.itinerary.map((item: any, index: number) => (
+        {experience.itinerary.map((item: { time: string; activity: string; description?: string }, index: number) => (
           <div key={index} className="flex">
             <div className="flex-shrink-0 w-20 text-sm font-medium text-primary-600">
               {item.time}
@@ -569,7 +533,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
       <div>
         <h3 className="text-xl font-semibold text-gray-900 mb-4">O que levar</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {experience.whatToBring.map((item: any, index: number) => (
+          {experience.whatToBring.map((item: string, index: number) => (
             <div key={index} className="flex items-start">
               <Backpack className="text-primary-600 mr-3 mt-0.5 flex-shrink-0" size={16} />
               <span className="text-gray-700">{item}</span>
@@ -621,7 +585,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
       <div>
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Medidas de segurança</h3>
         <div className="space-y-3">
-          {experience.safetyMeasures.map((measure: any, index: number) => (
+          {experience.safetyMeasures.map((measure: string, index: number) => (
             <div key={index} className="flex items-start">
               <Shield className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
               <span className="text-gray-700">{measure}</span>
@@ -643,7 +607,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
       </div>
       
       <div className="space-y-6">
-        {reviews.map((review: any) => (
+                {reviews.map((review) => (
           <Card key={review.id} className="p-6">
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-gradient-to-br from-earth-400 to-earth-600 rounded-full flex items-center justify-center flex-shrink-0">
@@ -654,12 +618,12 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
               
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-semibold text-gray-900">{review.user.name}</h4>
+                  <h4 className="font-semibold text-gray-900">{review.user}</h4>
                   <div className="flex items-center">
-                    {[...Array(5)].map((_: any, i: number) => (
-                      <Star 
-                        key={i} 
-                        size={14} 
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
                         className={i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
                       />
                     ))}
@@ -792,7 +756,7 @@ export default function ExperiencePage({ params }: ExperiencePageProps) {
             {/* Tabs */}
             <div className="border-b border-gray-200 mb-8">
               <nav className="flex space-x-8 overflow-x-auto">
-                {tabs.map((tab: any) => (
+                {tabs.map((tab: { id: string; label: string }) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}

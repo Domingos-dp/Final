@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+// motion intentionally removed (unused)
 import {
   MapPin,
   Star,
@@ -41,7 +41,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { mockProperties, mockUsers, mockReviews, mockBookings } from '@/data/mockData';
+import { mockProperties, mockUsers, mockReviews } from '@/data/mockData';
 import { formatCurrency, formatDate } from '@/utils';
 
 interface BookingFormData {
@@ -65,7 +65,6 @@ const PropertyDetailsPage: React.FC = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingData, setBookingData] = useState<BookingFormData>({
     checkIn: null,
     checkOut: null,
@@ -142,26 +141,13 @@ const PropertyDetailsPage: React.FC = () => {
       // Simulate booking API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const booking = {
-        id: Date.now().toString(),
-        userId: user.id,
-        propertyId: property.id,
-        checkIn: bookingData.checkIn,
-        checkOut: bookingData.checkOut,
-        guests: bookingData.guests,
-        totalAmount: calculateTotal().total,
-        status: 'pending',
-        createdAt: new Date(),
-        specialRequests: bookingData.specialRequests
-      };
-
       toast({
         title: "Reserva solicitada!",
         description: "Sua reserva foi enviada e está aguardando confirmação do anfitrião."
       });
 
       router.push('/dashboard?tab=bookings');
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro na reserva",
         description: "Ocorreu um erro ao processar sua reserva. Tente novamente.",

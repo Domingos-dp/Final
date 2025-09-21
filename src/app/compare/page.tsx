@@ -2,18 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Search,
-  Filter,
   MapPin,
   Star,
   Users,
-  Calendar,
-  ArrowUpDown,
   ExternalLink,
-  TrendingUp,
   TrendingDown,
-  Minus,
   Award,
   Shield,
   Zap,
@@ -29,10 +24,10 @@ import {
   Coffee,
   Waves,
   Dumbbell,
-  UtensilsCrossed
+  UtensilsCrossed,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 export default function ComparePage() {
@@ -251,7 +246,7 @@ export default function ComparePage() {
     }
   ];
   
-  const amenityIcons = {
+  const amenityIcons: Record<string, React.ElementType> = {
     wifi: Wifi,
     pool: Waves,
     gym: Dumbbell,
@@ -290,13 +285,15 @@ export default function ComparePage() {
     );
   };
   
-  const getBestPrice = (prices: any[]) => {
-    return prices.reduce((best, current) => 
+  type PriceInfo = { platform: string; price: number; originalPrice?: number; discount?: number; availability?: string; cancellation?: string; breakfast?: boolean; directBooking?: boolean; featured?: boolean };
+
+  const getBestPrice = (prices: PriceInfo[]): PriceInfo => {
+    return prices.reduce((best, current) =>
       current.price < best.price ? current : best
     );
   };
   
-  const renderPriceComparison = (property: any) => {
+  const renderPriceComparison = (property: { prices: PriceInfo[] }) => {
     const bestPrice = getBestPrice(property.prices);
     const sortedPrices = [...property.prices].sort((a, b) => a.price - b.price);
     
@@ -333,7 +330,7 @@ export default function ComparePage() {
               
               <div className="text-right">
                 <div className="flex items-center space-x-2">
-                  {priceInfo.originalPrice > priceInfo.price && (
+                  {typeof priceInfo.originalPrice === 'number' && priceInfo.originalPrice > priceInfo.price && (
                     <span className="text-sm text-gray-500 line-through">
                       {priceInfo.originalPrice.toLocaleString()} AOA
                     </span>
@@ -343,7 +340,7 @@ export default function ComparePage() {
                   </span>
                 </div>
                 
-                {priceInfo.discount > 0 && (
+                {typeof priceInfo.discount === 'number' && priceInfo.discount > 0 && (
                   <div className="flex items-center text-green-600 text-sm">
                     <TrendingDown size={14} className="mr-1" />
                     <span>-{priceInfo.discount}%</span>
@@ -395,9 +392,9 @@ export default function ComparePage() {
     );
   };
   
-  const renderPropertyCard = (property: any, index: number) => {
+  const renderPropertyCard = (property: { id: string; name: string; location?: string; rating?: number; reviews?: number; image?: string; amenities?: string[]; description?: string; prices: PriceInfo[] }, index: number) => {
     const bestPrice = getBestPrice(property.prices);
-    const maxDiscount = Math.max(...property.prices.map((p: { discount: number }) => p.discount));
+    const maxDiscount = Math.max(...property.prices.map((p) => p.discount || 0));
     
     return (
       <motion.div
@@ -426,7 +423,7 @@ export default function ComparePage() {
                     </h3>
                     <div className="flex items-center text-gray-600 mb-2">
                       <MapPin size={14} className="mr-1" />
-                      <span className="text-sm">{property.location?.city}, {property.location?.province}</span>
+                      <span className="text-sm">{String(property.location)}</span>
                     </div>
                     <div className="flex items-center mb-2">
                       <Star className="fill-yellow-400 text-yellow-400 mr-1" size={14} />
@@ -455,15 +452,15 @@ export default function ComparePage() {
                 
                 {/* Amenities */}
                 <div className="flex items-center space-x-3 mb-4">
-                  {property.amenities.slice(0, 5).map((amenity: string) => {
-                    const Icon = amenityIcons[amenity as keyof typeof amenityIcons];
+                  {property.amenities?.slice(0, 5).map((amenity: string) => {
+                    const Icon = amenityIcons[amenity as keyof typeof amenityIcons] as React.ElementType | undefined;
                     return Icon ? (
                       <div key={amenity} className="flex items-center text-gray-500">
                         <Icon size={14} />
                       </div>
                     ) : null;
                   })}
-                  {property.amenities.length > 5 && (
+                  {property.amenities && property.amenities.length > 5 && (
                     <span className="text-xs text-gray-500">+{property.amenities.length - 5} mais</span>
                   )}
                 </div>
@@ -484,7 +481,7 @@ export default function ComparePage() {
               
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Melhor oferta em {bestPrice.platform}</span>
-                {bestPrice.discount > 0 && (
+                {typeof bestPrice.discount === 'number' && bestPrice.discount > 0 && (
                   <div className="flex items-center text-green-600">
                     <TrendingDown size={14} className="mr-1" />
                     <span>Economia de {bestPrice.discount}%</span>

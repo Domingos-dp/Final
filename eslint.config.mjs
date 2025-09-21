@@ -23,7 +23,7 @@ const eslintConfig = [
   // Relax some strict rules to unblock builds during development
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn'
+      '@typescript-eslint/no-explicit-any': 'error'
     }
   }
 ];

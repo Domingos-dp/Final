@@ -3,12 +3,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  User,
+import { 
   Mail,
   Phone,
-  MapPin,
   Calendar,
   Edit3,
   Save,
@@ -18,17 +15,11 @@ import {
   Star,
   Award,
   Home,
-  MessageSquare,
-  Settings,
   Lock,
-  Bell,
-  Globe,
-  CreditCard,
   Eye,
   EyeOff,
   Check,
-  AlertCircle,
-  Upload
+  AlertCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -42,7 +33,7 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { mockUsers, mockProperties, mockExperiences, mockBookings, mockReviews } from '@/data/mockData';
+import { mockProperties, mockBookings, mockReviews } from '@/data/mockData';
 import { formatDate } from '@/utils';
 
 const ProfilePage: React.FC = () => {
@@ -96,7 +87,7 @@ const ProfilePage: React.FC = () => {
         title: 'Perfil atualizado',
         description: 'Suas informações foram salvas com sucesso.'
       });
-    } catch (error) {
+    } catch {
       toast({
         title: 'Erro',
         description: 'Não foi possível atualizar o perfil. Tente novamente.',

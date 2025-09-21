@@ -35,6 +35,7 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import mockData from '@/data/mockData';
+import { Booking, Property, Review } from '@/types';
 import { formatCurrency, formatDate } from '@/utils';
 
 const DashboardPage: React.FC = () => {
@@ -42,17 +43,17 @@ const DashboardPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   // Mock data para o usuário atual
-  const userBookings = mockData.bookings.filter(booking => booking.userId === user?.id);
-  const userReviews = mockData.reviews.filter(review => review.userId === user?.id);
-  const userFavorites = mockData.properties.filter(property => 
+  const userBookings: Booking[] = mockData.bookings.filter((booking: Booking) => booking.userId === user?.id);
+  const userReviews: Review[] = mockData.reviews.filter((review: Review) => review.userId === user?.id);
+  const userFavorites: Property[] = mockData.properties.filter((property: Property) => 
     (user?.favorites || []).includes(property.id)
   );
 
   const stats = {
     totalBookings: userBookings.length,
-    completedTrips: userBookings.filter((b: any) => b.status === 'completed').length,
-    upcomingTrips: userBookings.filter((b: any) => b.status === 'confirmed').length,
-    totalSpent: userBookings.reduce((sum: number, booking: any) => sum + (booking.totalPrice || 0), 0),
+  completedTrips: userBookings.filter((b: Booking) => b.status === 'completed').length,
+  upcomingTrips: userBookings.filter((b: Booking) => b.status === 'confirmed').length,
+  totalSpent: userBookings.reduce((sum: number, booking: Booking) => sum + (booking.totalPrice || 0), 0),
     reviewsGiven: userReviews.length,
     favoriteProperties: userFavorites.length
   };
@@ -258,10 +259,10 @@ const DashboardPage: React.FC = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {userBookings
-                      .filter((booking: any) => booking.status === 'confirmed')
+                      .filter((booking: Booking) => booking.status === 'confirmed')
                       .slice(0, 3)
-                      .map((booking: any) => {
-                        const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
+                      .map((booking: Booking) => {
+                        const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
                         return (
                           <div key={booking.id} className="flex items-center space-x-3 p-3 border rounded-lg">
                             <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -299,8 +300,8 @@ const DashboardPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {userBookings.slice(0, 5).map((booking: any) => {
-                    const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
+                    {userBookings.slice(0, 5).map((booking: Booking) => {
+                    const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
                     return (
                       <div key={booking.id} className="flex items-center space-x-4 p-4 border rounded-lg">
                         <div className={`w-3 h-3 rounded-full ${getStatusColor(booking.status)}`} />
@@ -331,8 +332,8 @@ const DashboardPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {userBookings.map((booking: any) => {
-                    const property = mockData.properties.find((p: any) => p.id === booking.propertyId);
+                  {userBookings.map((booking: Booking) => {
+                    const property = mockData.properties.find((p: Property) => p.id === booking.propertyId);
                     return (
                       <div key={booking.id} className="border rounded-lg p-6">
                         <div className="flex items-start justify-between mb-4">
@@ -419,7 +420,7 @@ const DashboardPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {userFavorites.map((property: any) => (
+                  {userFavorites.map((property: Property) => (
                     <div key={property.id} className="border rounded-lg overflow-hidden">
                       <div className="w-full h-48 bg-gray-200" />
                       <div className="p-4">

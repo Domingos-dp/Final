@@ -17,9 +17,8 @@ import {
   Chrome,
   Facebook,
   Apple,
-  MapPin,
   Check
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -28,7 +27,7 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
 import { isValidEmail } from '@/utils';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 interface FormData {
   firstName: string;
@@ -131,9 +130,9 @@ const RegisterPage: React.FC = () => {
         agreeToTerms: formData.acceptTerms,
         subscribeNewsletter: formData.receiveUpdates
       });
-      toast.success('Conta criada com sucesso! Verifique seu email.');
+  toast.success('Conta criada com sucesso! Verifique seu email.');
       router.push('/auth/verify-email');
-    } catch (error) {
+    } catch {
       toast.error('Erro ao criar conta. Tente novamente.');
     } finally {
       setIsLoading(false);
@@ -146,7 +145,7 @@ const RegisterPage: React.FC = () => {
     try {
       // Implementar login social
       toast.success(`Registro com ${provider} em breve!`);
-    } catch (error) {
+    } catch {
       toast.error('Erro no registro social. Tente novamente.');
     } finally {
       setIsLoading(false);

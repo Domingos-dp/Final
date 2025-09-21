@@ -17,14 +17,13 @@ import {
   Clock,
   XCircle,
   MessageSquare,
-  BarChart3,
-  FileText
+  BarChart3
 } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-
+  
 export default function HostDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedPeriod, setSelectedPeriod] = useState('month');

@@ -11,7 +11,7 @@ import {
   Clock
 } from 'lucide-react';
 import { CustomButton as Button } from '@/components/ui/button-custom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { CustomInput as Input } from '@/components/ui/input-custom';
 
 export default function ForgotPasswordPage() {
